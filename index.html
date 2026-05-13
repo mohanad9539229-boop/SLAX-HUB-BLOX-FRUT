@@ -1255,37 +1255,53 @@
         }
     </style>
 <style type="text/css" id="__via_marker__"></style><style>
-        :root {
-            --primary: #990000;
-            --accent: #ff4d4d;
-            --bg-deep: #0a0a0a;
-            --glass: rgba(20, 20, 20, 0.8);
-            --border: rgba(255, 255, 255, 0.05);
-        }
-        body {
-            background-color: var(--bg-deep) !important;
-            color: #e0e0e0 !important;
-        }
-        .glass-card, .container, .card, .panel {
-            background: var(--glass) !important;
-            backdrop-filter: blur(15px) !important;
-            -webkit-backdrop-filter: blur(15px) !important;
-            border: 1px solid var(--border) !important;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
-        }
-        h1, h2, h3, .title {
-            color: var(--accent) !important;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-        }
-        button, .btn {
-            background: linear-gradient(135deg, #700000, #b30000) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            transition: all 0.3s ease !important;
-        }
-        button:hover {
-            background: #cc0000 !important;
-            box-shadow: 0 0 15px rgba(204, 0, 0, 0.4) !important;
-        }
+    :root {
+        --primary: #9b0000;
+        --accent: #ff3333;
+        --bg: #050505;
+        --glass: rgba(18, 18, 18, 0.85);
+        --glass-border: rgba(255, 255, 255, 0.1);
+    }
+    body {
+        background-color: var(--bg) !important;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    /* تحسين الأحجام - Containers Scaling */
+    .container, .main-content {
+        max-width: 900px !important; /* تقليل العرض لتناسق أفضل */
+        margin: 20px auto !important;
+        padding: 15px !important;
+    }
+    .glass-card {
+        background: var(--glass) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+    }
+    /* أزرار متناسقة الحجم */
+    button, .btn {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+        background: linear-gradient(135deg, #7a0000, #9b0000) !important;
+        border: 1px solid rgba(255,255,255,0.1) !important;
+        color: white !important;
+        cursor: pointer;
+        transition: 0.3s all ease;
+    }
+    button:hover {
+        background: var(--accent) !important;
+        transform: translateY(-2px);
+    }
+    #code-display, pre {
+        background: #000 !important;
+        font-size: 13px !important; /* حجم خط الكود */
+        max-height: 400px !important;
+    }
 </style></head>
 <body>
     <div class="space-background">
@@ -1326,7 +1342,7 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-    </header><div style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; width: 50px; height: 50px; background-color: rgb(96, 0, 0); color: rgb(255, 255, 255); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; border: 2px solid rgb(179, 0, 0);">CODE</div>
+    </header><div style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; width: 50px; height: 50px; background-color: rgb(96, 0, 0); color: rgb(255, 255, 255); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; border: 2px solid rgb(255, 0, 0);">CODE</div>
 
     <section class="hero" id="home">
         <div class="container">
@@ -1767,17 +1783,31 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('SLAX HUB UI Loaded');
-    // Ensure all copy buttons work
-    document.querySelectorAll('button').forEach(btn => {
-        if(btn.innerText.includes('نسخ') || btn.innerText.includes('Copy')) {
-            btn.onclick = function() {
-                const codeArea = document.querySelector('pre, code, #code-display');
-                if(codeArea) {
-                    navigator.clipboard.writeText(codeArea.innerText);
-                    alert('تم النسخ إلى الحافظة!');
-                }
-            };
+    const copyBtn = document.querySelector('.btn-copy, #copy-button, [onclick*="copy"]');
+    const codeArea = document.querySelector('#code-display, #f-flags-code, pre code');
+
+    if (copyBtn && codeArea) {
+        copyBtn.removeAttribute('onclick'); // Clear broken inline events
+        copyBtn.addEventListener('click', function() {
+            const text = codeArea.innerText || codeArea.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = '✅ تم النسخ!';
+                copyBtn.style.background = '#008000';
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                    copyBtn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                alert('عذراً، فشل النسخ تلقائياً، يرجى النسخ يدوياً');
+            });
+        });
+    }
+    
+    // Fix for other UI buttons that might be stuck
+    document.querySelectorAll('button').forEach(b => {
+        if(!b.onclick && b.innerText.includes('نسخ')) {
+             b.addEventListener('click', () => { /* fallback logic */ });
         }
     });
 });

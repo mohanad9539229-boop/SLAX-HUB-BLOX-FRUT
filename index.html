@@ -23,7 +23,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #ff0000;
+            background-color: #000000;
             color: #ffffff;
             line-height: 1.6;
             min-height: 100vh;
@@ -39,7 +39,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: #ff0000;
+            background: #000000;
             overSLAX HUB: hidden;
         }
 
@@ -103,7 +103,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ff0000;
+            background: #000000;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -394,7 +394,7 @@
         }
 
         .badge {
-            background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: #a0a0a0;
             padding: 5px 15px;
             border-radius: 20px;
@@ -531,7 +531,7 @@
         }
 
         .tiktok-btn:hover {
-            background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .steps-container h3 {
@@ -565,7 +565,7 @@
         }
 
         .step-number {
-            background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: #a0a0a0;
             width: 40px;
             height: 40px;
@@ -739,7 +739,7 @@
         }
 
         .discord-btn:hover {
-            background: rgba(15, 15, 15, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,0,0,0.2);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .discord-preview {
@@ -832,7 +832,7 @@
         }
 
         .main-footer {
-            background: #ff0000;
+            background: #000000;
             padding: 60px 0 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -984,7 +984,7 @@
         }
 
         .modal-content {
-            background: #ff0000;
+            background: #000000;
             border-radius: 12px;
             max-width: 500px;
             width: 90%;
@@ -1219,7 +1219,7 @@
                 top: 80px;
                 right: 0;
                 width: 100%;
-                background: #ff0000;
+                background: #000000;
                 padding: 20px;
             }
             .main-nav.active {
@@ -1254,7 +1254,39 @@
             }
         }
     </style>
-<style type="text/css" id="__via_marker__"></style></head>
+<style type="text/css" id="__via_marker__"></style><style>
+        :root {
+            --primary: #990000;
+            --accent: #ff4d4d;
+            --bg-deep: #0a0a0a;
+            --glass: rgba(20, 20, 20, 0.8);
+            --border: rgba(255, 255, 255, 0.05);
+        }
+        body {
+            background-color: var(--bg-deep) !important;
+            color: #e0e0e0 !important;
+        }
+        .glass-card, .container, .card, .panel {
+            background: var(--glass) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+        h1, h2, h3, .title {
+            color: var(--accent) !important;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+        button, .btn {
+            background: linear-gradient(135deg, #700000, #b30000) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            transition: all 0.3s ease !important;
+        }
+        button:hover {
+            background: #cc0000 !important;
+            box-shadow: 0 0 15px rgba(204, 0, 0, 0.4) !important;
+        }
+</style></head>
 <body>
     <div class="space-background">
         <div class="stars-layer1">
@@ -1294,7 +1326,7 @@
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-    </header><div style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; width: 50px; height: 50px; background-color: rgb(96, 0, 0); color: rgb(255, 255, 255); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; border: 2px solid rgb(255, 0, 0);">CODE</div>
+    </header><div style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; width: 50px; height: 50px; background-color: rgb(96, 0, 0); color: rgb(255, 255, 255); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; border: 2px solid rgb(179, 0, 0);">CODE</div>
 
     <section class="hero" id="home">
         <div class="container">
@@ -1732,6 +1764,24 @@
         function getFlagues2Content() { return `{"DFIntMaxFrameBufferSize":"4","FIntMaquettesFrameRateBufferPercentage":"0","DFFlagDebugForceAnisoOff":"True","FIntRenderMsFrameGatherInterval":"144","DFFlagDebugEnableInterpolationVisualizer":"True","DFIntLightstepHTTPTransportHundredthsPercent2":"0","DFFlagEnableLightstepReporting2":"False","DFFlagBrowserTrackerIdTelemetryEnabled":"False","DFFlagBaseNetworkMetrics":"False","FStringGamesUrlPath":"/games/","DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent":"0","FFlagCommitToGraphicsQualityFix":"True","DFIntS2PhysicsSenderRate":"256","FFlagFixGraphicsQuality":"True","FIntPGSAngularDampingPermillPersecond":"9999999999","DFIntRunningBaseOrientationP":"450","DFIntNewRunningBaseAltitudeD":"195","FFlagDebugDisplayFPS":"False","FIntCoordinatorPlannerStepsPerIteration":"0","DFIntSimArbiterCFLLengthScaleThou":"2147483647","FFlagDebugPerfMode":"True","FFlagOptimizeCFrameUpdatesIC4":"True","FFlagOptimizeCFrameUpdates4":"True","FFlagMovePrerenderV2":"True","FFlagPerformanceControlUsesRuntime":"True","FStringIXPGraphicsOptimizationModeQualityBias":"null","FStringIXPGraphicsOptimizationModeBalancedBias":"null","FIntCoordinatorMemoryPrioritizationFrequencyHz":"0","FIntLuauGcGoalCore":"125","DFIntCharacterLoadTime":"1","FIntRenderNodeEnterSleepingFrames":"0","FFlagHighlightOutlinesOnMobile":"True","DFIntHttpCachePerfHundredthsPercent":"1036372536","FIntRuntimeMaxNumOfMutexes":"1000000","DFFlagGraphicsQualityUsageTelemetry":"False","DFIntHttpCacheCleanScheduleAfterMs":"1036372536","FFlagDebugGraphicsDisableDirect3D11":"True","DFIntFileCacheReserveSize":"2147483647","FIntRuntimeMaxNumOfStrands":"1000000","DFFlagGpuVsCpuBoundTelemetry":"False","DFIntHttpCacheEvictionExemptionMapMaxSize":"1036372536","DFFlagDebugExtendFramerateWidget":"True","FFlagChatTranslationSettingEnabled3":"False","DFIntLuaGcBoost":"2","FFlagEnableHarmonyOnFrameRateManager4":"True","DFFlagRobloxTelemetryAddDeviceRAM":"False","FIntCLI20390_2":"0","FFlagEnableNavBarLabels3":"False","DFIntHttpCacheAsyncWriterMaxPendingSize":"1036372536","DFIntLuauGcStepSizeKb":"5","FIntLuauGcGoal":"95","DFFlagDebugOverrideProfileFrameTimeNow":"True","FIntRuntimeMaxNumOfLatches":"1000000","FFlagLuaAppChartsPageRename":"False","DFIntHttpCacheReportSlowWritesMinDuration":"1036372536","DFIntHttpCachePerfSamplingRate":"1036372536","FStringIXPGraphicsOptimizationModePerformanceBias":"performanceBias","DFIntLuaGcMaxKb":"5000","DFIntHttpCacheCleanUpToAvailableSpaceMiB":"1036372536","DFFlagAddKtxContentHash2":"True","DFIntGraphicsOptimizationModePerformanceBiasPercent":"100","FFlagPerformanceControlEnablePortTextureManagerTrimMemory":"True","DFIntLuauGcStepMul":"100","DFFlagEnablePreloadAvatarAssets":"True","DFIntSignalRCoreHubMaxBackoffMs":"5000","DFIntSignalRCoreKeepAlivePingPeriodMs":"250","DFIntSignalRCoreHandshakeTimeoutMs":"3000","DFIntSignalRCoreHubBaseRetryMs":"10","DFIntSignalRCoreRpcQueueSize":"256","DFIntSignalRCoreServerTimeoutMs":"11100","FFlagEnableFPSAndFrameTime":"True"}`; }
     </script>
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('SLAX HUB UI Loaded');
+    // Ensure all copy buttons work
+    document.querySelectorAll('button').forEach(btn => {
+        if(btn.innerText.includes('نسخ') || btn.innerText.includes('Copy')) {
+            btn.onclick = function() {
+                const codeArea = document.querySelector('pre, code, #code-display');
+                if(codeArea) {
+                    navigator.clipboard.writeText(codeArea.innerText);
+                    alert('تم النسخ إلى الحافظة!');
+                }
+            };
+        }
+    });
+});
+</script>
 </body></html>
 
 /* --- ALL INTERNAL SCRIPTS --- */

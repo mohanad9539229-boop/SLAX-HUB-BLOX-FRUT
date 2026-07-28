@@ -1,1735 +1,438 @@
-<html><head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flow - الأداء الأفضل في روبلوكس</title>
-    <meta name="description" content="أفضل فلاقات لتحسين أداء روبلوكس على أجهزة PC - حصرياً لسيرفر Flow">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&amp;display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SLAX Manhwa Hub v3.1</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-color: #0d0d12;
+            --card-bg: #15151d;
+            --accent-color: #ff2a4b;
+            --accent-hover: #d91e3d;
+            --border-color: #232330;
+            --text-color: #ffffff;
+            --text-dim: #9a9ab0;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 1.5rem 0.8rem; text-align: center; min-height: 100vh; }
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #000000;
-            color: #ffffff;
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            direction: rtl;
-            position: relative;
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header { margin-bottom: 1.5rem; }
+        h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+        h1 span { color: var(--accent-color); }
+        p.sub { color: var(--text-dim); margin-top: 0.3rem; font-size: 0.85rem; }
 
-        .space-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: #000000;
-            overflow: hidden;
-        }
-
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .star {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: twinkle 5s infinite ease-in-out;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        .stars-layer1, .stars-layer2 {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .stars-layer1 {
-            animation: moveStars1 200s linear infinite;
-        }
-
-        .stars-layer2 {
-            animation: moveStars2 300s linear infinite;
-        }
-
-        @keyframes moveStars1 {
-            from { transform: translateY(0) translateX(0); }
-            to { transform: translateY(-100px) translateX(50px); }
-        }
-
-        @keyframes moveStars2 {
-            from { transform: translateY(0) translateX(0); }
-            to { transform: translateY(100px) translateX(-50px); }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000000;
+        .controls {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: all 0.3s ease;
-        }
-
-        .loader {
-            text-align: center;
-        }
-
-        .loader-circle {
-            width: 80px;
-            height: 80px;
-            border: 5px solid transparent;
-            border-top: 5px solid #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .main-header {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 15px 0;
-        }
-
-        .main-header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
-            font-size: 2rem;
-            font-weight: 900;
-            color: #ffffff;
-        }
-
-        .logo i {
-            font-size: 2.5rem;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            opacity: 0.6;
-            margin-top: 5px;
-            color: #a0a0a0;
-        }
-
-        .main-nav ul {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-link {
-            color: #a0a0a0;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .hero {
-            padding: 180px 0 100px;
-            position: relative;
-        }
-
-        .hero .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 50px;
-        }
-
-        .hero-content {
-            flex: 1;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            line-height: 1.2;
-        }
-
-        .hero-description {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.7;
-            max-width: 600px;
-            color: #a0a0a0;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .stat {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 20px;
-            border-radius: 12px;
-            min-width: 120px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .stat:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .stat i {
-            font-size: 2rem;
-            color: #a0a0a0;
-            margin-bottom: 10px;
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .stat-text {
-            font-size: 0.9rem;
-            opacity: 0.5;
-            color: #a0a0a0;
-        }
-
-        .hero-image {
-            flex: 1;
-            display: flex;
             justify-content: center;
-        }
-
-        .floating-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .premium-icon {
-            font-size: 3rem;
-            color: #a0a0a0;
-            margin-bottom: 15px;
-        }
-
-        .flagues-section {
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
         }
 
-        .section-header p {
-            font-size: 1.1rem;
-            opacity: 0.5;
-            max-width: 600px;
-            margin: 0 auto;
-            color: #a0a0a0;
-        }
-
-        .warning-box {
-            background: rgba(250, 166, 26, 0.02);
-            border: 1px solid rgba(250, 166, 26, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .warning-box i {
-            color: #faa61a;
-            font-size: 2rem;
-            margin-top: 5px;
-        }
-
-        .warning-content h4 {
-            color: #faa61a;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .warning-content p {
-            color: #a0a0a0;
-            opacity: 0.8;
-        }
-
-        .flagues-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .flague-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .flague-card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .card-header {
-            padding: 25px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .card-icon {
-            font-size: 2rem;
-            color: #a0a0a0;
-        }
-
-        .card-header h3 {
-            font-size: 1.5rem;
-            flex: 1;
-        }
-
-        .badge {
-            background: rgba(255, 255, 255, 0.1);
-            color: #a0a0a0;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .card-body {
-            padding: 25px;
-        }
-
-        .features-list {
-            list-style: none;
-            margin-bottom: 20px;
-        }
-
-        .features-list li {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #a0a0a0;
-        }
-
-        .features-list i {
-            color: #a0a0a0;
-        }
-
-        .card-note {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 15px;
+        input[type="text"] {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #a0a0a0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .card-footer {
-            padding: 20px 25px;
-            background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .download-btn {
+            outline: none;
             width: 100%;
-            padding: 15px;
-            background: transparent;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .download-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .coming-soon {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .coming-soon i {
-            color: #a0a0a0;
-            font-size: 1.5rem;
-        }
-
-        .coming-soon p {
-            color: #a0a0a0;
-        }
-
-        .tutorial-section {
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .tutorial-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .video-container {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .video-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .video-icon {
-            font-size: 4rem;
-            color: #a0a0a0;
-        }
-
-        .tiktok-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            padding: 15px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tiktok-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .steps-container h3 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .steps {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .step:hover {
-            background: rgba(255, 255, 255, 0.03);
-            transform: translateX(-10px);
-        }
-
-        .step-number {
-            background: rgba(255, 255, 255, 0.1);
-            color: #a0a0a0;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .step-content h4 {
-            margin-bottom: 5px;
-        }
-
-        .step-content p {
-            color: #a0a0a0;
-        }
-
-        .download-section {
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .download-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .download-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .download-card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .app-icon {
-            font-size: 3rem;
-            color: #a0a0a0;
-            margin-bottom: 20px;
-        }
-
-        .download-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .download-card p {
-            color: #a0a0a0;
-        }
-
-        .app-features {
-            list-style: none;
-            margin: 20px 0;
-        }
-
-        .app-features li {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #a0a0a0;
-        }
-
-        .app-features i {
-            color: #a0a0a0;
-        }
-
-        .app-download-btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background: transparent;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .app-download-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .discord-section {
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .discord-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .discord-info {
+            max-width: 280px;
+            font-size: 0.9rem;
             text-align: right;
         }
 
-        .discord-icon {
-            font-size: 4rem;
-            color: #a0a0a0;
-            margin-bottom: 20px;
-        }
+        input[type="text"]:focus { border-color: var(--accent-color); }
 
-        .discord-info h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .discord-info p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            color: #a0a0a0;
-        }
-
-        .discord-features {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
-        .discord-features li {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-            color: #a0a0a0;
-        }
-
-        .discord-features i {
-            color: #a0a0a0;
-        }
-
-        .discord-btn {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            padding: 15px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            max-width: 300px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .discord-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .discord-preview {
-            display: flex;
-            justify-content: center;
-        }
-
-        .server-stats {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 30px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .server-stat {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.02);
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.4rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .server-stat:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .server-stat i {
-            font-size: 2rem;
-            color: #a0a0a0;
-        }
-
-        .server-stat h4 {
-            font-size: 1.8rem;
-        }
-
-        .server-stat p {
-            color: #a0a0a0;
-        }
-
-        .info-section {
-            padding: 50px 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .info-card h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .info-card p {
-            color: #a0a0a0;
-            margin-bottom: 20px;
-        }
-
-        .discord-support-btn {
-            display: inline-block;
-            background: #5865F2;
-            color: #ffffff;
-            padding: 15px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .discord-support-btn:hover {
-            background: #4752c4;
-            transform: scale(1.05);
-        }
-
-        .main-footer {
-            background: #000000;
-            padding: 60px 0 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-section h4 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .footer-logo i {
-            color: #a0a0a0;
-        }
-
-        .footer-description {
-            opacity: 0.5;
-            line-height: 1.8;
-            color: #a0a0a0;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #a0a0a0;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-links a:hover {
-            color: #ffffff;
-            transform: translateX(-5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-link {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: #a0a0a0;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            gap: 6px;
             text-decoration: none;
         }
 
-        .social-link:hover {
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .btn:hover { background-color: var(--accent-hover); }
+        .btn:disabled { background-color: #2a2a38; color: #666; cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-dim); }
+        .btn-outline:hover { background: var(--card-bg); color: #fff; }
 
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 30px;
-        }
-
-        .disclaimer {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .counter-badge {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
         }
 
-        .disclaimer h5 {
-            color: #a0a0a0;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
         }
 
-        .disclaimer p {
-            color: #a0a0a0;
-            opacity: 0.7;
+        @media (min-width: 600px) {
+            .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
         }
 
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .copyright p {
-            margin-bottom: 10px;
-            color: #a0a0a0;
-            opacity: 0.5;
-        }
-
-        .developer {
-            font-size: 1.1rem;
-            margin: 15px 0;
-            color: #a0a0a0;
-        }
-
-        .version {
-            font-size: 0.9rem;
-            opacity: 0.3;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #000000;
-            border-radius: 12px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
         }
 
-        .modal-header {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 20px;
+        .card:hover { transform: translateY(-3px); border-color: var(--accent-color); }
+        .card img { width: 100%; height: 220px; object-fit: cover; background: #1a1a24; }
+        .card-info { padding: 0.7rem; display: flex; flex-direction: column; gap: 0.3rem; }
+        .card-title { font-size: 0.85rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .card-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
         }
 
-        .modal-header h3 {
-            display: flex;
+        .score { color: #ffd700; font-weight: bold; }
+        .genres { font-size: 0.7rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* Modal / النافذة المنبثقة */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
+            z-index: 99999;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            max-width: 550px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: right;
+            padding: 1.2rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            animation: popIn 0.25s ease;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .modal-close {
-            background: none;
+            position: absolute;
+            top: 0.8rem; left: 0.8rem;
+            background: transparent;
             border: none;
-            color: #a0a0a0;
-            font-size: 2rem;
+            color: var(--text-dim);
+            font-size: 1.6rem;
             cursor: pointer;
             line-height: 1;
         }
 
-        .modal-close:hover {
-            color: #ffffff;
-        }
+        .modal-header { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .modal-header img { width: 110px; height: 155px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+        .modal-details { display: flex; flex-direction: column; gap: 0.4rem; justify-content: center; }
+        .modal-title { font-size: 1.1rem; font-weight: bold; color: #fff; line-height: 1.3; }
+        .modal-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 1rem; max-height: 140px; overflow-y: auto; padding-right: 5px; }
 
-        .modal-body {
-            padding: 30px;
-        }
+        .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-        .modal-download-content {
-            text-align: center;
+        /* Toast الإشعارات */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            z-index: 100000;
         }
-
-        .download-header {
-            margin-bottom: 20px;
-        }
-
-        .download-header i {
-            font-size: 3rem;
-            color: #a0a0a0;
-            margin-bottom: 10px;
-        }
-
-        .download-header h4 {
-            font-size: 1.5rem;
-        }
-
-        .download-description {
-            margin-bottom: 20px;
-            color: #a0a0a0;
-        }
-
-        .download-info {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 10px 15px;
-            border-radius: 8px;
-            color: #a0a0a0;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .download-instructions {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: right;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .download-instructions h5 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .download-instructions ol {
-            padding-right: 20px;
-            margin: 0;
-            color: #a0a0a0;
-        }
-
-        .download-instructions li {
-            margin-bottom: 8px;
-        }
-
-        .download-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 25px 0;
-        }
-
-        .modal-download-btn, .modal-copy-btn, .modal-close-btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-family: 'Cairo', sans-serif;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-        }
-
-        .modal-download-btn:hover, .modal-copy-btn:hover, .modal-close-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .modal-warning {
-            background: rgba(250, 166, 26, 0.02);
-            border: 1px solid rgba(250, 166, 26, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .modal-warning i {
-            color: #faa61a;
-            font-size: 1.2rem;
-        }
-
-        .modal-warning p {
-            color: #a0a0a0;
-        }
-
-        .download-success {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .success-icon {
-            font-size: 4rem;
-            color: #a0a0a0;
-            margin-bottom: 20px;
-        }
-
-        .success-tips {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: right;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .success-tips h5 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .success-tips ul {
-            padding-right: 20px;
-            margin: 0;
-            color: #a0a0a0;
-        }
-
-        .success-tips li {
-            margin-bottom: 8px;
-        }
-
-        .animate {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 992px) {
-            .hero .container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .hero-stats {
-                justify-content: center;
-            }
-            .tutorial-content,
-            .discord-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .flagues-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-nav {
-                display: none;
-                position: fixed;
-                top: 80px;
-                right: 0;
-                width: 100%;
-                background: #000000;
-                padding: 20px;
-            }
-            .main-nav.active {
-                display: block;
-            }
-            .main-nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .download-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-stats {
-                flex-direction: column;
-                align-items: center;
-            }
-            .stat {
-                width: 100%;
-                max-width: 200px;
-            }
-            .server-stats {
-                grid-template-columns: 1fr;
-            }
-        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
-<style type="text/css" id="__via_marker__"></style></head>
+</head>
 <body>
-    <div class="space-background">
-        <div class="stars-layer1">
-            <div class="stars" id="stars1"><div class="star" style="width: 2.89366px; height: 2.89366px; left: 74.90798%; top: 3.96998%; animation-delay: 2.22977s; animation-duration: 3.520523s;"></div><div class="star" style="width: 3.793162px; height: 3.793162px; left: 88.888433%; top: 90.079553%; animation-delay: 4.738259s; animation-duration: 3.734715s;"></div><div class="star" style="width: 2.050661px; height: 2.050661px; left: 89.118569%; top: 53.424186%; animation-delay: 0.111967s; animation-duration: 3.430713s;"></div><div class="star" style="width: 1.859701px; height: 1.859701px; left: 43.556634%; top: 13.741102%; animation-delay: 3.050544s; animation-duration: 3.33365s;"></div><div class="star" style="width: 2.597675px; height: 2.597675px; left: 60.217667%; top: 92.566314%; animation-delay: 1.774816s; animation-duration: 3.957407s;"></div><div class="star" style="width: 3.731351px; height: 3.731351px; left: 83.940566%; top: 42.464137%; animation-delay: 3.395028s; animation-duration: 2.85325s;"></div><div class="star" style="width: 1.42711px; height: 1.42711px; left: 20.907339%; top: 98.266381%; animation-delay: 4.932541s; animation-duration: 4.151756s;"></div><div class="star" style="width: 2.037995px; height: 2.037995px; left: 24.813497%; top: 58.649045%; animation-delay: 1.740603s; animation-duration: 2.4371s;"></div><div class="star" style="width: 1.307046px; height: 1.307046px; left: 84.945838%; top: 59.129967%; animation-delay: 3.476792s; animation-duration: 4.032641s;"></div><div class="star" style="width: 1.21437px; height: 1.21437px; left: 1.940162%; top: 54.084617%; animation-delay: 4.483829s; animation-duration: 4.568382s;"></div><div class="star" style="width: 1.341416px; height: 1.341416px; left: 19.28596%; top: 50.240773%; animation-delay: 3.505071s; animation-duration: 2.088357s;"></div><div class="star" style="width: 3.743213px; height: 3.743213px; left: 84.285093%; top: 46.546541%; animation-delay: 2.68644s; animation-duration: 3.062518s;"></div><div class="star" style="width: 3.265214px; height: 3.265214px; left: 24.022705%; top: 23.451893%; animation-delay: 3.225232s; animation-duration: 2.08872s;"></div><div class="star" style="width: 3.330912px; height: 3.330912px; left: 20.558697%; top: 76.749622%; animation-delay: 0.253999s; animation-duration: 4.84184s;"></div><div class="star" style="width: 1.873488px; height: 1.873488px; left: 14.231431%; top: 10.377807%; animation-delay: 0.134031s; animation-duration: 4.151895s;"></div><div class="star" style="width: 1.001727px; height: 1.001727px; left: 89.02654%; top: 87.915366%; animation-delay: 2.55294s; animation-duration: 2.329361s;"></div><div class="star" style="width: 3.471036px; height: 3.471036px; left: 93.069567%; top: 86.026996%; animation-delay: 1.389614s; animation-duration: 2.122574s;"></div><div class="star" style="width: 3.935974px; height: 3.935974px; left: 60.098616%; top: 30.554104%; animation-delay: 3.618816s; animation-duration: 3.414368s;"></div><div class="star" style="width: 2.513121px; height: 2.513121px; left: 38.481776%; top: 23.191958%; animation-delay: 1.574886s; animation-duration: 2.456291s;"></div><div class="star" style="width: 2.362469px; height: 2.362469px; left: 85.072652%; top: 11.213709%; animation-delay: 2.414599s; animation-duration: 4.244208s;"></div><div class="star" style="width: 2.633407px; height: 2.633407px; left: 73.449707%; top: 30.673624%; animation-delay: 2.320752s; animation-duration: 2.872555s;"></div><div class="star" style="width: 1.73782px; height: 1.73782px; left: 39.328428%; top: 53.294399%; animation-delay: 2.085355s; animation-duration: 4.970704s;"></div><div class="star" style="width: 1.398288px; height: 1.398288px; left: 27.242767%; top: 89.716499%; animation-delay: 0.233959s; animation-duration: 4.388458s;"></div><div class="star" style="width: 3.556723px; height: 3.556723px; left: 21.093488%; top: 88.04952%; animation-delay: 3.274413s; animation-duration: 2.378708s;"></div><div class="star" style="width: 2.139829px; height: 2.139829px; left: 60.806053%; top: 36.324307%; animation-delay: 3.098137s; animation-duration: 2.891814s;"></div><div class="star" style="width: 3.785981px; height: 3.785981px; left: 43.120613%; top: 7.705055%; animation-delay: 1.885673s; animation-duration: 2.543282s;"></div><div class="star" style="width: 2.662227px; height: 2.662227px; left: 21.300134%; top: 82.932879%; animation-delay: 2.613623s; animation-duration: 3.749608s;"></div><div class="star" style="width: 3.639605px; height: 3.639605px; left: 50.470746%; top: 18.793503%; animation-delay: 3.403021s; animation-duration: 2.070553s;"></div><div class="star" style="width: 3.691408px; height: 3.691408px; left: 82.289673%; top: 35.867401%; animation-delay: 1.656402s; animation-duration: 4.335627s;"></div><div class="star" style="width: 3.091989px; height: 3.091989px; left: 41.867194%; top: 51.504141%; animation-delay: 2.979437s; animation-duration: 3.600207s;"></div><div class="star" style="width: 2.72469px; height: 2.72469px; left: 99.012191%; top: 62.143224%; animation-delay: 3.75662s; animation-duration: 4.129114s;"></div><div class="star" style="width: 1.374652px; height: 1.374652px; left: 58.980279%; top: 81.453579%; animation-delay: 0.54608s; animation-duration: 4.468351s;"></div><div class="star" style="width: 3.897372px; height: 3.897372px; left: 64.745803%; top: 59.185429%; animation-delay: 0.819103s; animation-duration: 4.101704s;"></div><div class="star" style="width: 2.984419px; height: 2.984419px; left: 93.79492%; top: 64.503449%; animation-delay: 2.817481s; animation-duration: 3.729111s;"></div><div class="star" style="width: 3.303846px; height: 3.303846px; left: 94.786814%; top: 64.743128%; animation-delay: 2.096112s; animation-duration: 2.20795s;"></div><div class="star" style="width: 3.913422px; height: 3.913422px; left: 56.695477%; top: 49.705439%; animation-delay: 2.460601s; animation-duration: 4.377463s;"></div><div class="star" style="width: 1.067645px; height: 1.067645px; left: 71.192148%; top: 44.310062%; animation-delay: 3.35633s; animation-duration: 3.18645s;"></div><div class="star" style="width: 3.081976px; height: 3.081976px; left: 37.812872%; top: 46.535623%; animation-delay: 2.097247s; animation-duration: 4.705806s;"></div><div class="star" style="width: 2.632781px; height: 2.632781px; left: 61.987409%; top: 27.749158%; animation-delay: 2.898115s; animation-duration: 3.675113s;"></div><div class="star" style="width: 3.224478px; height: 3.224478px; left: 47.554487%; top: 81.096123%; animation-delay: 4.300058s; animation-duration: 3.600415s;"></div><div class="star" style="width: 3.379781px; height: 3.379781px; left: 90.50848%; top: 63.402005%; animation-delay: 0.666509s; animation-duration: 2.644331s;"></div><div class="star" style="width: 3.219483px; height: 3.219483px; left: 80.260819%; top: 78.522692%; animation-delay: 2.422071s; animation-duration: 3.445857s;"></div><div class="star" style="width: 2.295805px; height: 2.295805px; left: 34.818545%; top: 61.250077%; animation-delay: 0.532764s; animation-duration: 2.973068s;"></div><div class="star" style="width: 3.348007px; height: 3.348007px; left: 51.957939%; top: 22.946183%; animation-delay: 0.334246s; animation-duration: 3.970572s;"></div><div class="star" style="width: 1.73319px; height: 1.73319px; left: 63.629387%; top: 81.103432%; animation-delay: 0.234622s; animation-duration: 3.451106s;"></div><div class="star" style="width: 1.812523px; height: 1.812523px; left: 12.815682%; top: 45.401591%; animation-delay: 4.872224s; animation-duration: 2.06943s;"></div><div class="star" style="width: 2.712914px; height: 2.712914px; left: 0.832928%; top: 5.930081%; animation-delay: 4.713157s; animation-duration: 4.137413s;"></div><div class="star" style="width: 1.51677px; height: 1.51677px; left: 9.399418%; top: 64.767594%; animation-delay: 2.291162s; animation-duration: 3.611835s;"></div><div class="star" style="width: 2.903552px; height: 2.903552px; left: 88.332169%; top: 15.631422%; animation-delay: 1.906478s; animation-duration: 3.615619s;"></div><div class="star" style="width: 2.548011px; height: 2.548011px; left: 78.459231%; top: 12.341931%; animation-delay: 3.765325s; animation-duration: 4.771208s;"></div><div class="star" style="width: 1.505968px; height: 1.505968px; left: 8.39874%; top: 55.633463%; animation-delay: 1.198982s; animation-duration: 2.194853s;"></div><div class="star" style="width: 3.313235px; height: 3.313235px; left: 62.55016%; top: 94.089747%; animation-delay: 2.612703s; animation-duration: 3.0228s;"></div><div class="star" style="width: 2.045402px; height: 2.045402px; left: 69.107005%; top: 0.054705%; animation-delay: 2.58709s; animation-duration: 2.154982s;"></div><div class="star" style="width: 2.210294px; height: 2.210294px; left: 15.784485%; top: 60.65958%; animation-delay: 4.1733s; animation-duration: 3.756118s;"></div><div class="star" style="width: 2.53132px; height: 2.53132px; left: 99.42782%; top: 8.076882%; animation-delay: 1.229936s; animation-duration: 4.330351s;"></div><div class="star" style="width: 1.004547px; height: 1.004547px; left: 64.545146%; top: 79.235207%; animation-delay: 1.792439s; animation-duration: 4.691029s;"></div><div class="star" style="width: 2.546639px; height: 2.546639px; left: 47.839387%; top: 30.106109%; animation-delay: 1.954329s; animation-duration: 2.311804s;"></div><div class="star" style="width: 2.299255px; height: 2.299255px; left: 65.306266%; top: 61.035303%; animation-delay: 3.975134s; animation-duration: 3.193885s;"></div><div class="star" style="width: 2.847395px; height: 2.847395px; left: 95.978824%; top: 48.065918%; animation-delay: 4.521951s; animation-duration: 2.809007s;"></div><div class="star" style="width: 3.580367px; height: 3.580367px; left: 24.968795%; top: 37.631452%; animation-delay: 4.112301s; animation-duration: 2.974835s;"></div><div class="star" style="width: 1.363786px; height: 1.363786px; left: 10.954315%; top: 90.210716%; animation-delay: 1.19041s; animation-duration: 4.274135s;"></div><div class="star" style="width: 2.328789px; height: 2.328789px; left: 6.004078%; top: 12.495065%; animation-delay: 0.829027s; animation-duration: 3.511236s;"></div><div class="star" style="width: 1.845208px; height: 1.845208px; left: 59.489358%; top: 31.240054%; animation-delay: 1.166376s; animation-duration: 4.656866s;"></div><div class="star" style="width: 1.413213px; height: 1.413213px; left: 48.110617%; top: 17.87866%; animation-delay: 0.186946s; animation-duration: 3.736789s;"></div><div class="star" style="width: 2.027817px; height: 2.027817px; left: 39.710013%; top: 7.128271%; animation-delay: 0.020089s; animation-duration: 4.088665s;"></div><div class="star" style="width: 3.239295px; height: 3.239295px; left: 25.321469%; top: 95.786412%; animation-delay: 2.477253s; animation-duration: 2.543705s;"></div><div class="star" style="width: 3.443705px; height: 3.443705px; left: 51.317206%; top: 13.358888%; animation-delay: 1.72877s; animation-duration: 3.941899s;"></div><div class="star" style="width: 1.471997px; height: 1.471997px; left: 13.808003%; top: 62.343749%; animation-delay: 3.741323s; animation-duration: 4.6513s;"></div><div class="star" style="width: 3.452464px; height: 3.452464px; left: 36.885193%; top: 14.765071%; animation-delay: 4.360769s; animation-duration: 3.596387s;"></div><div class="star" style="width: 3.408724px; height: 3.408724px; left: 5.074823%; top: 60.548183%; animation-delay: 2.315621s; animation-duration: 2.957419s;"></div><div class="star" style="width: 2.068679px; height: 2.068679px; left: 61.105787%; top: 92.117855%; animation-delay: 2.46217s; animation-duration: 3.797968s;"></div><div class="star" style="width: 1.733044px; height: 1.733044px; left: 66.614424%; top: 94.184252%; animation-delay: 1.57158s; animation-duration: 2.828991s;"></div><div class="star" style="width: 1.022566px; height: 1.022566px; left: 58.975816%; top: 29.884317%; animation-delay: 3.597582s; animation-duration: 2.209611s;"></div><div class="star" style="width: 1.451555px; height: 1.451555px; left: 84.671773%; top: 99.07811%; animation-delay: 2.943262s; animation-duration: 3.039428s;"></div><div class="star" style="width: 1.010653px; height: 1.010653px; left: 66.137876%; top: 5.340871%; animation-delay: 2.680023s; animation-duration: 2.776638s;"></div><div class="star" style="width: 1.572344px; height: 1.572344px; left: 3.612681%; top: 68.929998%; animation-delay: 1.63042s; animation-duration: 3.34702s;"></div><div class="star" style="width: 1.733921px; height: 1.733921px; left: 70.368349%; top: 83.803476%; animation-delay: 0.68914s; animation-duration: 3.761792s;"></div><div class="star" style="width: 2.850385px; height: 2.850385px; left: 34.997289%; top: 43.413027%; animation-delay: 2.118724s; animation-duration: 3.96569s;"></div><div class="star" style="width: 2.683291px; height: 2.683291px; left: 80.305785%; top: 0.111703%; animation-delay: 3.54849s; animation-duration: 4.612555s;"></div><div class="star" style="width: 1.74581px; height: 1.74581px; left: 48.393015%; top: 3.382184%; animation-delay: 2.325637s; animation-duration: 3.49484s;"></div><div class="star" style="width: 3.220715px; height: 3.220715px; left: 15.157615%; top: 82.561306%; animation-delay: 2.319908s; animation-duration: 2.101083s;"></div><div class="star" style="width: 2.839524px; height: 2.839524px; left: 64.213924%; top: 96.116518%; animation-delay: 3.476154s; animation-duration: 4.784464s;"></div><div class="star" style="width: 3.100741px; height: 3.100741px; left: 37.693374%; top: 74.145815%; animation-delay: 0.600167s; animation-duration: 3.878297s;"></div><div class="star" style="width: 2.412272px; height: 2.412272px; left: 43.044289%; top: 31.560509%; animation-delay: 1.30599s; animation-duration: 4.368976s;"></div><div class="star" style="width: 2.348167px; height: 2.348167px; left: 44.750466%; top: 61.128638%; animation-delay: 2.751238s; animation-duration: 4.520025s;"></div><div class="star" style="width: 2.310045px; height: 2.310045px; left: 97.188359%; top: 32.415031%; animation-delay: 3.143839s; animation-duration: 3.316254s;"></div><div class="star" style="width: 2.332741px; height: 2.332741px; left: 89.907687%; top: 73.72046%; animation-delay: 1.782905s; animation-duration: 2.601052s;"></div><div class="star" style="width: 1.332788px; height: 1.332788px; left: 4.234917%; top: 29.159328%; animation-delay: 3.956657s; animation-duration: 3.57541s;"></div><div class="star" style="width: 3.414241px; height: 3.414241px; left: 20.510577%; top: 9.44379%; animation-delay: 3.904771s; animation-duration: 2.511303s;"></div><div class="star" style="width: 2.407992px; height: 2.407992px; left: 43.012872%; top: 88.477096%; animation-delay: 2.243957s; animation-duration: 2.225449s;"></div><div class="star" style="width: 3.379138px; height: 3.379138px; left: 19.178971%; top: 79.645828%; animation-delay: 4.684632s; animation-duration: 4.177927s;"></div><div class="star" style="width: 2.54836px; height: 2.54836px; left: 69.805747%; top: 4.892574%; animation-delay: 3.808989s; animation-duration: 3.733196s;"></div><div class="star" style="width: 2.518828px; height: 2.518828px; left: 11.51387%; top: 77.401722%; animation-delay: 2.486537s; animation-duration: 4.211615s;"></div><div class="star" style="width: 2.631599px; height: 2.631599px; left: 47.932871%; top: 66.037882%; animation-delay: 3.689541s; animation-duration: 3.902849s;"></div><div class="star" style="width: 3.497807px; height: 3.497807px; left: 34.301663%; top: 5.113212%; animation-delay: 3.962575s; animation-duration: 2.16116s;"></div><div class="star" style="width: 2.078698px; height: 2.078698px; left: 99.145483%; top: 80.524282%; animation-delay: 2.218952s; animation-duration: 2.969015s;"></div><div class="star" style="width: 1.255132px; height: 1.255132px; left: 11.731082%; top: 54.549579%; animation-delay: 0.234989s; animation-duration: 2.671986s;"></div><div class="star" style="width: 3.534591px; height: 3.534591px; left: 58.088309%; top: 9.185026%; animation-delay: 1.86391s; animation-duration: 4.971792s;"></div><div class="star" style="width: 3.858184px; height: 3.858184px; left: 93.240583%; top: 79.249368%; animation-delay: 0.730941s; animation-duration: 2.05194s;"></div><div class="star" style="width: 2.954815px; height: 2.954815px; left: 3.313154%; top: 6.220895%; animation-delay: 0.884488s; animation-duration: 2.525186s;"></div><div class="star" style="width: 1.380063px; height: 1.380063px; left: 88.751655%; top: 56.582817%; animation-delay: 1.75636s; animation-duration: 2.659007s;"></div><div class="star" style="width: 2.172427px; height: 2.172427px; left: 65.212323%; top: 75.918334%; animation-delay: 1.580612s; animation-duration: 4.606697s;"></div><div class="star" style="width: 2.302931px; height: 2.302931px; left: 68.262558%; top: 96.760742%; animation-delay: 2.250287s; animation-duration: 4.234531s;"></div><div class="star" style="width: 1.626497px; height: 1.626497px; left: 89.848918%; top: 22.272158%; animation-delay: 4.068974s; animation-duration: 3.776163s;"></div><div class="star" style="width: 3.807115px; height: 3.807115px; left: 59.638894%; top: 33.151082%; animation-delay: 3.35588s; animation-duration: 4.515826s;"></div><div class="star" style="width: 3.907138px; height: 3.907138px; left: 96.977601%; top: 5.306943%; animation-delay: 0.159858s; animation-duration: 4.371896s;"></div><div class="star" style="width: 3.244691px; height: 3.244691px; left: 14.832823%; top: 65.298118%; animation-delay: 4.488071s; animation-duration: 2.950294s;"></div><div class="star" style="width: 1.559539px; height: 1.559539px; left: 68.872659%; top: 82.25429%; animation-delay: 2.391762s; animation-duration: 2.262032s;"></div><div class="star" style="width: 2.922844px; height: 2.922844px; left: 64.32177%; top: 96.484881%; animation-delay: 1.264274s; animation-duration: 2.504855s;"></div><div class="star" style="width: 1.848331px; height: 1.848331px; left: 27.352349%; top: 91.147857%; animation-delay: 1.54131s; animation-duration: 4.592909s;"></div><div class="star" style="width: 3.568203px; height: 3.568203px; left: 45.485097%; top: 49.682516%; animation-delay: 3.07529s; animation-duration: 3.236207s;"></div><div class="star" style="width: 3.710862px; height: 3.710862px; left: 80.65195%; top: 31.217133%; animation-delay: 0.147349s; animation-duration: 2.504805s;"></div><div class="star" style="width: 2.705455px; height: 2.705455px; left: 97.751129%; top: 87.598924%; animation-delay: 4.637755s; animation-duration: 2.211187s;"></div><div class="star" style="width: 3.802455px; height: 3.802455px; left: 17.259513%; top: 11.657124%; animation-delay: 4.053356s; animation-duration: 2.642123s;"></div><div class="star" style="width: 1.107872px; height: 1.107872px; left: 75.101335%; top: 21.523732%; animation-delay: 0.147225s; animation-duration: 2.896132s;"></div><div class="star" style="width: 2.572993px; height: 2.572993px; left: 69.832716%; top: 51.180303%; animation-delay: 0.776661s; animation-duration: 4.606803s;"></div><div class="star" style="width: 1.966287px; height: 1.966287px; left: 39.570147%; top: 72.858887%; animation-delay: 1.059898s; animation-duration: 2.424555s;"></div><div class="star" style="width: 3.704237px; height: 3.704237px; left: 74.528498%; top: 77.799546%; animation-delay: 2.481926s; animation-duration: 3.960051s;"></div><div class="star" style="width: 2.17287px; height: 2.17287px; left: 56.13069%; top: 14.352344%; animation-delay: 3.249751s; animation-duration: 2.68359s;"></div><div class="star" style="width: 3.102533px; height: 3.102533px; left: 77.704228%; top: 53.505276%; animation-delay: 1.060773s; animation-duration: 3.506642s;"></div><div class="star" style="width: 3.441252px; height: 3.441252px; left: 80.545702%; top: 80.846885%; animation-delay: 2.946516s; animation-duration: 2.456645s;"></div><div class="star" style="width: 3.118041px; height: 3.118041px; left: 73.823452%; top: 35.783333%; animation-delay: 3.119713s; animation-duration: 4.955872s;"></div><div class="star" style="width: 2.399031px; height: 2.399031px; left: 17.211939%; top: 90.050712%; animation-delay: 2.691203s; animation-duration: 3.145528s;"></div><div class="star" style="width: 1.880444px; height: 1.880444px; left: 39.309703%; top: 58.289154%; animation-delay: 4.407866s; animation-duration: 3.213141s;"></div><div class="star" style="width: 3.739255px; height: 3.739255px; left: 28.136103%; top: 14.92699%; animation-delay: 0.874784s; animation-duration: 2.462688s;"></div><div class="star" style="width: 2.550756px; height: 2.550756px; left: 80.310967%; top: 80.608009%; animation-delay: 4.175119s; animation-duration: 3.078553s;"></div><div class="star" style="width: 3.622749px; height: 3.622749px; left: 7.660115%; top: 64.310401%; animation-delay: 3.083794s; animation-duration: 3.507229s;"></div><div class="star" style="width: 2.546204px; height: 2.546204px; left: 81.819511%; top: 19.2011%; animation-delay: 3.390633s; animation-duration: 3.139385s;"></div><div class="star" style="width: 2.295814px; height: 2.295814px; left: 18.679357%; top: 57.722698%; animation-delay: 1.950838s; animation-duration: 4.848363s;"></div><div class="star" style="width: 3.207976px; height: 3.207976px; left: 28.097158%; top: 22.712435%; animation-delay: 2.302112s; animation-duration: 3.885556s;"></div><div class="star" style="width: 1.790245px; height: 1.790245px; left: 92.185348%; top: 26.619485%; animation-delay: 0.610424s; animation-duration: 3.072609s;"></div><div class="star" style="width: 2.240938px; height: 2.240938px; left: 77.517427%; top: 61.304986%; animation-delay: 0.208519s; animation-duration: 3.867342s;"></div><div class="star" style="width: 2.43567px; height: 2.43567px; left: 83.700459%; top: 81.898658%; animation-delay: 2.002814s; animation-duration: 3.392814s;"></div><div class="star" style="width: 3.843266px; height: 3.843266px; left: 88.553869%; top: 56.347946%; animation-delay: 4.681656s; animation-duration: 4.061363s;"></div><div class="star" style="width: 3.135179px; height: 3.135179px; left: 89.945085%; top: 98.197658%; animation-delay: 1.130311s; animation-duration: 4.892499s;"></div><div class="star" style="width: 1.57966px; height: 1.57966px; left: 80.359702%; top: 35.484749%; animation-delay: 0.96385s; animation-duration: 2.903554s;"></div><div class="star" style="width: 2.732319px; height: 2.732319px; left: 19.613326%; top: 86.875371%; animation-delay: 1.723776s; animation-duration: 2.477611s;"></div><div class="star" style="width: 1.141851px; height: 1.141851px; left: 13.145823%; top: 38.713933%; animation-delay: 2.877939s; animation-duration: 2.351717s;"></div><div class="star" style="width: 3.570999px; height: 3.570999px; left: 72.695801%; top: 55.219719%; animation-delay: 3.322187s; animation-duration: 4.572781s;"></div><div class="star" style="width: 3.239327px; height: 3.239327px; left: 98.130895%; top: 38.94625%; animation-delay: 3.957355s; animation-duration: 2.536226s;"></div><div class="star" style="width: 3.103519px; height: 3.103519px; left: 97.707412%; top: 94.080886%; animation-delay: 0.559455s; animation-duration: 4.921433s;"></div><div class="star" style="width: 1.710801px; height: 1.710801px; left: 14.629927%; top: 70.287449%; animation-delay: 4.108485s; animation-duration: 4.849605s;"></div><div class="star" style="width: 1.028231px; height: 1.028231px; left: 39.421143%; top: 19.502036%; animation-delay: 2.440749s; animation-duration: 4.771943s;"></div><div class="star" style="width: 1.926637px; height: 1.926637px; left: 47.888571%; top: 11.076668%; animation-delay: 0.530874s; animation-duration: 4.248168s;"></div><div class="star" style="width: 3.424288px; height: 3.424288px; left: 93.066642%; top: 39.060698%; animation-delay: 2.041062s; animation-duration: 2.999067s;"></div><div class="star" style="width: 1.436465px; height: 1.436465px; left: 25.093243%; top: 27.736168%; animation-delay: 3.483955s; animation-duration: 4.862982s;"></div><div class="star" style="width: 3.941776px; height: 3.941776px; left: 53.645857%; top: 31.941336%; animation-delay: 1.616366s; animation-duration: 4.347856s;"></div><div class="star" style="width: 2.231154px; height: 2.231154px; left: 63.385186%; top: 49.236834%; animation-delay: 1.839259s; animation-duration: 4.534612s;"></div><div class="star" style="width: 1.889835px; height: 1.889835px; left: 47.268116%; top: 86.327113%; animation-delay: 2.369324s; animation-duration: 2.795717s;"></div><div class="star" style="width: 2.453883px; height: 2.453883px; left: 19.954738%; top: 20.110217%; animation-delay: 3.847039s; animation-duration: 2.986813s;"></div><div class="star" style="width: 3.321381px; height: 3.321381px; left: 33.189495%; top: 39.184322%; animation-delay: 3.253306s; animation-duration: 4.976711s;"></div><div class="star" style="width: 1.912164px; height: 1.912164px; left: 79.694554%; top: 97.19479%; animation-delay: 1.9708s; animation-duration: 2.722587s;"></div><div class="star" style="width: 3.226351px; height: 3.226351px; left: 69.205018%; top: 70.011968%; animation-delay: 0.978029s; animation-duration: 4.73502s;"></div><div class="star" style="width: 3.107054px; height: 3.107054px; left: 95.953443%; top: 94.170247%; animation-delay: 3.797592s; animation-duration: 3.454605s;"></div><div class="star" style="width: 1.900672px; height: 1.900672px; left: 35.427629%; top: 68.390883%; animation-delay: 4.234093s; animation-duration: 4.631526s;"></div><div class="star" style="width: 3.325381px; height: 3.325381px; left: 68.275838%; top: 24.238122%; animation-delay: 2.54772s; animation-duration: 2.857223s;"></div><div class="star" style="width: 3.881063px; height: 3.881063px; left: 68.643677%; top: 86.594782%; animation-delay: 0.831839s; animation-duration: 3.615322s;"></div><div class="star" style="width: 1.559071px; height: 1.559071px; left: 55.869763%; top: 43.100269%; animation-delay: 2.827286s; animation-duration: 3.834086s;"></div><div class="star" style="width: 3.006439px; height: 3.006439px; left: 23.373849%; top: 52.252585%; animation-delay: 3.796625s; animation-duration: 4.405469s;"></div><div class="star" style="width: 3.489913px; height: 3.489913px; left: 88.113335%; top: 25.221552%; animation-delay: 0.503547s; animation-duration: 2.737774s;"></div><div class="star" style="width: 1.724268px; height: 1.724268px; left: 9.655136%; top: 97.846204%; animation-delay: 1.994567s; animation-duration: 2.328082s;"></div><div class="star" style="width: 1.091244px; height: 1.091244px; left: 16.886682%; top: 14.082698%; animation-delay: 1.211103s; animation-duration: 3.85401s;"></div><div class="star" style="width: 3.657467px; height: 3.657467px; left: 33.937098%; top: 4.931725%; animation-delay: 0.416667s; animation-duration: 3.344285s;"></div><div class="star" style="width: 1.166567px; height: 1.166567px; left: 75.250984%; top: 87.874954%; animation-delay: 4.89138s; animation-duration: 3.703508s;"></div><div class="star" style="width: 1.595251px; height: 1.595251px; left: 54.495425%; top: 24.855804%; animation-delay: 2.390093s; animation-duration: 2.621887s;"></div><div class="star" style="width: 2.395621px; height: 2.395621px; left: 83.612088%; top: 45.030399%; animation-delay: 4.208024s; animation-duration: 2.227384s;"></div><div class="star" style="width: 1.931118px; height: 1.931118px; left: 38.367303%; top: 48.923093%; animation-delay: 1.448476s; animation-duration: 2.082992s;"></div><div class="star" style="width: 3.805558px; height: 3.805558px; left: 97.856424%; top: 6.491467%; animation-delay: 1.820435s; animation-duration: 3.438765s;"></div><div class="star" style="width: 2.687369px; height: 2.687369px; left: 18.282689%; top: 79.056822%; animation-delay: 2.446184s; animation-duration: 3.626743s;"></div><div class="star" style="width: 3.928979px; height: 3.928979px; left: 18.51514%; top: 86.687554%; animation-delay: 0.049219s; animation-duration: 3.054889s;"></div><div class="star" style="width: 3.612399px; height: 3.612399px; left: 55.058975%; top: 94.255126%; animation-delay: 2.600589s; animation-duration: 3.838856s;"></div><div class="star" style="width: 3.840099px; height: 3.840099px; left: 61.916977%; top: 80.820007%; animation-delay: 0.019448s; animation-duration: 3.687139s;"></div><div class="star" style="width: 2.774091px; height: 2.774091px; left: 17.984544%; top: 19.344626%; animation-delay: 2.171519s; animation-duration: 2.88038s;"></div><div class="star" style="width: 1.939757px; height: 1.939757px; left: 12.238315%; top: 44.58551%; animation-delay: 0.462398s; animation-duration: 4.323806s;"></div><div class="star" style="width: 3.556228px; height: 3.556228px; left: 1.780681%; top: 49.558624%; animation-delay: 0.081033s; animation-duration: 4.411594s;"></div><div class="star" style="width: 2.487498px; height: 2.487498px; left: 22.356693%; top: 4.037689%; animation-delay: 4.584783s; animation-duration: 4.199214s;"></div><div class="star" style="width: 2.884848px; height: 2.884848px; left: 47.25269%; top: 37.822608%; animation-delay: 4.698599s; animation-duration: 3.070115s;"></div><div class="star" style="width: 3.372273px; height: 3.372273px; left: 25.122018%; top: 17.339267%; animation-delay: 0.096539s; animation-duration: 4.111155s;"></div><div class="star" style="width: 2.234182px; height: 2.234182px; left: 29.657035%; top: 6.419448%; animation-delay: 2.998634s; animation-duration: 2.876855s;"></div><div class="star" style="width: 2.264395px; height: 2.264395px; left: 93.061282%; top: 67.361428%; animation-delay: 3.688595s; animation-duration: 3.371333s;"></div><div class="star" style="width: 2.778372px; height: 2.778372px; left: 78.368995%; top: 81.241228%; animation-delay: 4.631714s; animation-duration: 4.378155s;"></div><div class="star" style="width: 1.756438px; height: 1.756438px; left: 65.449757%; top: 18.179858%; animation-delay: 4.503004s; animation-duration: 4.106943s;"></div><div class="star" style="width: 1.682037px; height: 1.682037px; left: 47.752043%; top: 47.553191%; animation-delay: 1.201424s; animation-duration: 3.327493s;"></div><div class="star" style="width: 1.55546px; height: 1.55546px; left: 84.121651%; top: 13.302052%; animation-delay: 4.139677s; animation-duration: 2.938404s;"></div><div class="star" style="width: 3.82303px; height: 3.82303px; left: 73.495915%; top: 60.874263%; animation-delay: 3.532875s; animation-duration: 4.491693s;"></div><div class="star" style="width: 3.436625px; height: 3.436625px; left: 0.628377%; top: 45.541339%; animation-delay: 3.820218s; animation-duration: 3.03537s;"></div><div class="star" style="width: 2.848605px; height: 2.848605px; left: 80.505253%; top: 37.305478%; animation-delay: 2.311762s; animation-duration: 4.226279s;"></div><div class="star" style="width: 1.815371px; height: 1.815371px; left: 46.34927%; top: 27.973036%; animation-delay: 2.091839s; animation-duration: 3.145122s;"></div><div class="star" style="width: 3.566353px; height: 3.566353px; left: 46.443402%; top: 61.978683%; animation-delay: 0.604297s; animation-duration: 2.615704s;"></div><div class="star" style="width: 2.680826px; height: 2.680826px; left: 95.639874%; top: 34.816789%; animation-delay: 4.124897s; animation-duration: 4.467834s;"></div><div class="star" style="width: 2.783877px; height: 2.783877px; left: 77.169668%; top: 58.236942%; animation-delay: 2.5113s; animation-duration: 4.000826s;"></div><div class="star" style="width: 1.568342px; height: 1.568342px; left: 15.750572%; top: 2.213098%; animation-delay: 3.843359s; animation-duration: 4.104081s;"></div><div class="star" style="width: 3.660805px; height: 3.660805px; left: 44.889006%; top: 94.189016%; animation-delay: 3.273793s; animation-duration: 3.525801s;"></div><div class="star" style="width: 2.070982px; height: 2.070982px; left: 1.018489%; top: 31.770091%; animation-delay: 1.924457s; animation-duration: 2.700215s;"></div><div class="star" style="width: 3.059998px; height: 3.059998px; left: 14.840855%; top: 42.504792%; animation-delay: 0.795846s; animation-duration: 4.455864s;"></div><div class="star" style="width: 1.246342px; height: 1.246342px; left: 43.037344%; top: 44.645553%; animation-delay: 4.849806s; animation-duration: 3.894783s;"></div><div class="star" style="width: 1.257705px; height: 1.257705px; left: 78.250173%; top: 99.569907%; animation-delay: 4.75817s; animation-duration: 4.701077s;"></div><div class="star" style="width: 3.253734px; height: 3.253734px; left: 77.17817%; top: 23.459777%; animation-delay: 3.168509s; animation-duration: 4.031148s;"></div><div class="star" style="width: 2.267233px; height: 2.267233px; left: 34.767721%; top: 55.964963%; animation-delay: 3.870161s; animation-duration: 2.756171s;"></div><div class="star" style="width: 2.039458px; height: 2.039458px; left: 70.687845%; top: 78.079905%; animation-delay: 3.618636s; animation-duration: 2.223837s;"></div></div>
+
+    <div class="container">
+        <header>
+            <h1>SLAX <span>MANHWA HUB</span></h1>
+            <p class="sub">عرض 50 مانهوا جديدة بدون تكرار مع كافة الميزات التفاعلية</p>
+        </header>
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="بحث بالاسم في الصفحة..." oninput="filterLocalResults()">
+            <button class="btn" id="loadBtn" onclick="fetchUniqueManhwa()">عرض 50 مانهوا جديدة ➔</button>
+
+            <button class="btn btn-outline" onclick="resetExclusions()">إعادة ضبط القائمة</button>
+            <div class="counter-badge" id="excludedCount">المستبعدة: 0</div>
         </div>
-        <div class="stars-layer2">
-            <div class="stars" id="stars2"><div class="star" style="width: 2.913908px; height: 2.913908px; left: 79.203395%; top: 88.614078%; animation-delay: 4.367753s; animation-duration: 5.274161s;"></div><div class="star" style="width: 4.825203px; height: 4.825203px; left: 50.710071%; top: 16.209775%; animation-delay: 2.280554s; animation-duration: 6.307733s;"></div><div class="star" style="width: 3.964477px; height: 3.964477px; left: 90.838372%; top: 15.02298%; animation-delay: 2.330278s; animation-duration: 3.601988s;"></div><div class="star" style="width: 4.553116px; height: 4.553116px; left: 3.830845%; top: 54.394556%; animation-delay: 1.2262s; animation-duration: 4.840942s;"></div><div class="star" style="width: 4.156489px; height: 4.156489px; left: 27.167313%; top: 25.896651%; animation-delay: 3.480528s; animation-duration: 4.727397s;"></div><div class="star" style="width: 4.24358px; height: 4.24358px; left: 66.990734%; top: 55.279435%; animation-delay: 1.721321s; animation-duration: 3.978627s;"></div><div class="star" style="width: 2.745014px; height: 2.745014px; left: 43.884577%; top: 36.948419%; animation-delay: 4.033226s; animation-duration: 5.19414s;"></div><div class="star" style="width: 5.506194px; height: 5.506194px; left: 93.652408%; top: 93.458006%; animation-delay: 1.886342s; animation-duration: 4.869088s;"></div><div class="star" style="width: 5.614214px; height: 5.614214px; left: 40.978181%; top: 95.358092%; animation-delay: 2.731104s; animation-duration: 3.483624s;"></div><div class="star" style="width: 4.686652px; height: 4.686652px; left: 18.142656%; top: 3.272675%; animation-delay: 2.401273s; animation-duration: 5.190752s;"></div><div class="star" style="width: 2.150677px; height: 2.150677px; left: 38.411758%; top: 84.381632%; animation-delay: 1.104136s; animation-duration: 5.366065s;"></div><div class="star" style="width: 5.275189px; height: 5.275189px; left: 46.679261%; top: 62.791343%; animation-delay: 0.114376s; animation-duration: 6.237418s;"></div><div class="star" style="width: 3.3598px; height: 3.3598px; left: 4.318647%; top: 53.42792%; animation-delay: 0.561269s; animation-duration: 4.132194s;"></div><div class="star" style="width: 5.223762px; height: 5.223762px; left: 84.07347%; top: 26.497999%; animation-delay: 1.022712s; animation-duration: 3.966573s;"></div><div class="star" style="width: 4.649179px; height: 4.649179px; left: 33.563227%; top: 59.16324%; animation-delay: 3.814798s; animation-duration: 6.45614s;"></div><div class="star" style="width: 5.377207px; height: 5.377207px; left: 52.614213%; top: 12.841064%; animation-delay: 0.477699s; animation-duration: 6.870814s;"></div><div class="star" style="width: 4.75869px; height: 4.75869px; left: 18.349197%; top: 60.583616%; animation-delay: 3.905713s; animation-duration: 3.400408s;"></div><div class="star" style="width: 5.90876px; height: 5.90876px; left: 39.598776%; top: 53.350615%; animation-delay: 2.334517s; animation-duration: 6.799093s;"></div><div class="star" style="width: 3.173265px; height: 3.173265px; left: 89.891607%; top: 55.680055%; animation-delay: 1.103223s; animation-duration: 3.689403s;"></div><div class="star" style="width: 4.255899px; height: 4.255899px; left: 83.797648%; top: 16.505317%; animation-delay: 3.25097s; animation-duration: 3.437675s;"></div><div class="star" style="width: 3.340297px; height: 3.340297px; left: 48.585874%; top: 17.474846%; animation-delay: 2.468574s; animation-duration: 5.610574s;"></div><div class="star" style="width: 3.81208px; height: 3.81208px; left: 3.051867%; top: 20.975279%; animation-delay: 4.511481s; animation-duration: 5.775078s;"></div><div class="star" style="width: 3.953527px; height: 3.953527px; left: 95.699169%; top: 91.46331%; animation-delay: 0.082227s; animation-duration: 5.233202s;"></div><div class="star" style="width: 2.011439px; height: 2.011439px; left: 95.947685%; top: 72.129071%; animation-delay: 1.750655s; animation-duration: 4.779461s;"></div><div class="star" style="width: 4.609125px; height: 4.609125px; left: 73.613592%; top: 64.095219%; animation-delay: 1.759494s; animation-duration: 4.270452s;"></div><div class="star" style="width: 2.674329px; height: 2.674329px; left: 37.849997%; top: 4.563984%; animation-delay: 2.218429s; animation-duration: 4.58732s;"></div><div class="star" style="width: 2.905524px; height: 2.905524px; left: 66.11814%; top: 36.809888%; animation-delay: 1.934926s; animation-duration: 6.341651s;"></div><div class="star" style="width: 2.180261px; height: 2.180261px; left: 40.592762%; top: 88.579066%; animation-delay: 1.216717s; animation-duration: 6.284595s;"></div><div class="star" style="width: 2.751246px; height: 2.751246px; left: 2.122711%; top: 31.886863%; animation-delay: 3.504334s; animation-duration: 6.799166s;"></div><div class="star" style="width: 4.17238px; height: 4.17238px; left: 13.631133%; top: 51.668401%; animation-delay: 0.804356s; animation-duration: 3.420103s;"></div><div class="star" style="width: 3.840998px; height: 3.840998px; left: 75.414202%; top: 0.787716%; animation-delay: 2.708862s; animation-duration: 3.449575s;"></div><div class="star" style="width: 2.729094px; height: 2.729094px; left: 77.323861%; top: 51.423999%; animation-delay: 0.832734s; animation-duration: 4.773068s;"></div><div class="star" style="width: 5.767343px; height: 5.767343px; left: 98.664721%; top: 65.89153%; animation-delay: 2.658994s; animation-duration: 5.123034s;"></div><div class="star" style="width: 5.813165px; height: 5.813165px; left: 1.020936%; top: 72.13401%; animation-delay: 4.666952s; animation-duration: 6.369536s;"></div><div class="star" style="width: 2.296753px; height: 2.296753px; left: 35.646189%; top: 19.488444%; animation-delay: 3.923271s; animation-duration: 4.1323s;"></div><div class="star" style="width: 5.041937px; height: 5.041937px; left: 93.259061%; top: 57.242868%; animation-delay: 0.146631s; animation-duration: 6.391484s;"></div><div class="star" style="width: 3.174285px; height: 3.174285px; left: 44.858616%; top: 60.164283%; animation-delay: 2.477141s; animation-duration: 3.298809s;"></div><div class="star" style="width: 2.000968px; height: 2.000968px; left: 10.571099%; top: 79.243167%; animation-delay: 1.201917s; animation-duration: 5.64078s;"></div><div class="star" style="width: 4.082169px; height: 4.082169px; left: 41.450448%; top: 71.170435%; animation-delay: 4.321347s; animation-duration: 5.345735s;"></div><div class="star" style="width: 2.788492px; height: 2.788492px; left: 25.179553%; top: 75.238689%; animation-delay: 0.775853s; animation-duration: 5.63458s;"></div><div class="star" style="width: 5.829269px; height: 5.829269px; left: 9.235435%; top: 65.146254%; animation-delay: 0.390343s; animation-duration: 6.240513s;"></div><div class="star" style="width: 2.049484px; height: 2.049484px; left: 81.930609%; top: 36.686272%; animation-delay: 0.62499s; animation-duration: 4.051499s;"></div><div class="star" style="width: 3.251364px; height: 3.251364px; left: 67.697285%; top: 21.399834%; animation-delay: 2.124866s; animation-duration: 4.952189s;"></div><div class="star" style="width: 5.631912px; height: 5.631912px; left: 4.874139%; top: 22.183538%; animation-delay: 1.54671s; animation-duration: 6.576359s;"></div><div class="star" style="width: 3.340869px; height: 3.340869px; left: 81.531677%; top: 65.887952%; animation-delay: 0.336223s; animation-duration: 4.340217s;"></div><div class="star" style="width: 3.274964px; height: 3.274964px; left: 83.712764%; top: 2.853121%; animation-delay: 2.037096s; animation-duration: 3.271625s;"></div><div class="star" style="width: 3.049266px; height: 3.049266px; left: 79.651585%; top: 62.25307%; animation-delay: 1.526559s; animation-duration: 4.835358s;"></div><div class="star" style="width: 4.786423px; height: 4.786423px; left: 74.809283%; top: 82.809327%; animation-delay: 3.248496s; animation-duration: 5.982341s;"></div><div class="star" style="width: 2.075768px; height: 2.075768px; left: 49.902439%; top: 29.340305%; animation-delay: 3.999574s; animation-duration: 5.039232s;"></div><div class="star" style="width: 2.118571px; height: 2.118571px; left: 8.069807%; top: 83.689586%; animation-delay: 1.15002s; animation-duration: 5.09424s;"></div><div class="star" style="width: 3.167421px; height: 3.167421px; left: 41.661898%; top: 82.13602%; animation-delay: 3.645747s; animation-duration: 3.715819s;"></div><div class="star" style="width: 4.485629px; height: 4.485629px; left: 50.389025%; top: 9.582292%; animation-delay: 1.926857s; animation-duration: 3.55685s;"></div><div class="star" style="width: 3.930138px; height: 3.930138px; left: 73.823437%; top: 1.950269%; animation-delay: 2.617522s; animation-duration: 3.186924s;"></div><div class="star" style="width: 5.386535px; height: 5.386535px; left: 96.803056%; top: 49.362854%; animation-delay: 0.405275s; animation-duration: 5.680515s;"></div><div class="star" style="width: 4.613291px; height: 4.613291px; left: 44.01506%; top: 89.492612%; animation-delay: 4.986412s; animation-duration: 5.322332s;"></div><div class="star" style="width: 2.270568px; height: 2.270568px; left: 40.48136%; top: 79.592526%; animation-delay: 4.541379s; animation-duration: 3.317444s;"></div><div class="star" style="width: 3.159969px; height: 3.159969px; left: 96.773442%; top: 15.397175%; animation-delay: 1.514733s; animation-duration: 3.964586s;"></div><div class="star" style="width: 5.426132px; height: 5.426132px; left: 0.075798%; top: 85.038672%; animation-delay: 4.245901s; animation-duration: 4.92831s;"></div><div class="star" style="width: 4.736402px; height: 4.736402px; left: 49.413242%; top: 7.191098%; animation-delay: 4.373828s; animation-duration: 5.291745s;"></div><div class="star" style="width: 2.349116px; height: 2.349116px; left: 36.184767%; top: 87.498717%; animation-delay: 0.55989s; animation-duration: 4.635158s;"></div><div class="star" style="width: 3.99269px; height: 3.99269px; left: 22.136825%; top: 83.410124%; animation-delay: 0.925945s; animation-duration: 5.158023s;"></div><div class="star" style="width: 5.852425px; height: 5.852425px; left: 21.276556%; top: 38.724567%; animation-delay: 4.962087s; animation-duration: 5.658336s;"></div><div class="star" style="width: 4.662283px; height: 4.662283px; left: 45.357758%; top: 43.960187%; animation-delay: 3.319779s; animation-duration: 4.865141s;"></div><div class="star" style="width: 2.233903px; height: 2.233903px; left: 92.11008%; top: 5.029053%; animation-delay: 4.912939s; animation-duration: 6.352697s;"></div><div class="star" style="width: 5.117271px; height: 5.117271px; left: 2.059194%; top: 27.210722%; animation-delay: 4.963559s; animation-duration: 6.479041s;"></div><div class="star" style="width: 3.246751px; height: 3.246751px; left: 64.773728%; top: 19.216604%; animation-delay: 4.687905s; animation-duration: 5.168428s;"></div><div class="star" style="width: 5.141559px; height: 5.141559px; left: 78.398677%; top: 26.298228%; animation-delay: 1.746129s; animation-duration: 5.473885s;"></div><div class="star" style="width: 2.98443px; height: 2.98443px; left: 67.813592%; top: 52.503778%; animation-delay: 1.92014s; animation-duration: 6.93546s;"></div><div class="star" style="width: 5.703956px; height: 5.703956px; left: 57.760734%; top: 88.351765%; animation-delay: 0.070957s; animation-duration: 4.682357s;"></div><div class="star" style="width: 5.147152px; height: 5.147152px; left: 91.531208%; top: 6.267755%; animation-delay: 2.514435s; animation-duration: 6.357764s;"></div><div class="star" style="width: 5.757036px; height: 5.757036px; left: 11.645524%; top: 90.392066%; animation-delay: 4.839204s; animation-duration: 6.67255s;"></div><div class="star" style="width: 2.083758px; height: 2.083758px; left: 59.278766%; top: 63.618341%; animation-delay: 1.591327s; animation-duration: 4.631434s;"></div><div class="star" style="width: 5.199129px; height: 5.199129px; left: 51.74614%; top: 98.418454%; animation-delay: 3.302549s; animation-duration: 6.548343s;"></div><div class="star" style="width: 5.868497px; height: 5.868497px; left: 18.895569%; top: 46.389313%; animation-delay: 0.311161s; animation-duration: 4.962826s;"></div><div class="star" style="width: 3.28459px; height: 3.28459px; left: 0.567167%; top: 4.312021%; animation-delay: 1.884948s; animation-duration: 4.980762s;"></div><div class="star" style="width: 5.236517px; height: 5.236517px; left: 43.738409%; top: 63.375986%; animation-delay: 4.453744s; animation-duration: 3.42994s;"></div><div class="star" style="width: 5.862653px; height: 5.862653px; left: 27.408412%; top: 67.414613%; animation-delay: 4.978392s; animation-duration: 4.630959s;"></div><div class="star" style="width: 3.390011px; height: 3.390011px; left: 38.410722%; top: 18.96311%; animation-delay: 2.790646s; animation-duration: 3.68078s;"></div><div class="star" style="width: 5.146063px; height: 5.146063px; left: 79.201591%; top: 63.655076%; animation-delay: 4.338838s; animation-duration: 4.599922s;"></div><div class="star" style="width: 4.222387px; height: 4.222387px; left: 21.863555%; top: 84.190417%; animation-delay: 2.663088s; animation-duration: 5.348038s;"></div><div class="star" style="width: 5.784687px; height: 5.784687px; left: 69.911535%; top: 25.50901%; animation-delay: 0.670567s; animation-duration: 3.963046s;"></div><div class="star" style="width: 3.295282px; height: 3.295282px; left: 47.979452%; top: 96.407073%; animation-delay: 2.974534s; animation-duration: 3.377556s;"></div><div class="star" style="width: 4.881817px; height: 4.881817px; left: 46.509822%; top: 70.668331%; animation-delay: 4.29991s; animation-duration: 3.875607s;"></div><div class="star" style="width: 5.498004px; height: 5.498004px; left: 39.174402%; top: 9.760247%; animation-delay: 3.790781s; animation-duration: 4.171854s;"></div><div class="star" style="width: 5.605499px; height: 5.605499px; left: 54.581415%; top: 31.04736%; animation-delay: 4.352s; animation-duration: 3.670317s;"></div><div class="star" style="width: 3.629799px; height: 3.629799px; left: 85.957528%; top: 36.699475%; animation-delay: 2.209631s; animation-duration: 6.832033s;"></div><div class="star" style="width: 3.274827px; height: 3.274827px; left: 73.251292%; top: 55.079735%; animation-delay: 1.509756s; animation-duration: 4.755426s;"></div><div class="star" style="width: 3.613506px; height: 3.613506px; left: 63.099903%; top: 21.401307%; animation-delay: 0.404219s; animation-duration: 3.30964s;"></div><div class="star" style="width: 5.522377px; height: 5.522377px; left: 72.058543%; top: 8.970138%; animation-delay: 1.012324s; animation-duration: 4.467746s;"></div><div class="star" style="width: 2.80622px; height: 2.80622px; left: 18.565931%; top: 28.026324%; animation-delay: 1.97123s; animation-duration: 3.097838s;"></div><div class="star" style="width: 4.363414px; height: 4.363414px; left: 46.640104%; top: 1.853119%; animation-delay: 4.455216s; animation-duration: 5.714964s;"></div><div class="star" style="width: 3.251809px; height: 3.251809px; left: 38.599132%; top: 75.413354%; animation-delay: 2.943224s; animation-duration: 4.327775s;"></div><div class="star" style="width: 3.301398px; height: 3.301398px; left: 68.481119%; top: 93.868018%; animation-delay: 0.898889s; animation-duration: 5.777602s;"></div><div class="star" style="width: 2.481874px; height: 2.481874px; left: 82.89119%; top: 17.738607%; animation-delay: 3.80277s; animation-duration: 4.074575s;"></div><div class="star" style="width: 5.877412px; height: 5.877412px; left: 7.516864%; top: 46.631483%; animation-delay: 4.889106s; animation-duration: 3.352191s;"></div><div class="star" style="width: 5.20058px; height: 5.20058px; left: 99.687509%; top: 19.283203%; animation-delay: 3.332873s; animation-duration: 4.05571s;"></div><div class="star" style="width: 2.952255px; height: 2.952255px; left: 24.601376%; top: 27.353737%; animation-delay: 0.110463s; animation-duration: 3.10691s;"></div><div class="star" style="width: 5.572464px; height: 5.572464px; left: 87.970122%; top: 67.467454%; animation-delay: 2.262106s; animation-duration: 5.099496s;"></div><div class="star" style="width: 2.55542px; height: 2.55542px; left: 95.037653%; top: 54.997469%; animation-delay: 1.959813s; animation-duration: 5.852016s;"></div><div class="star" style="width: 3.393886px; height: 3.393886px; left: 35.945755%; top: 37.094975%; animation-delay: 2.517898s; animation-duration: 3.569034s;"></div></div>
-        </div>
+
+        <div class="grid" id="manhwaGrid"></div>
     </div>
 
-    <div class="loading-screen" id="loadingScreen" style="opacity: 0; display: none;">
-        <div class="loader">
-            <div class="loader-circle"></div>
-            <p>جاري تحميل مركز فلاقات Flow...</p>
-        </div>
-    </div>
-
-    <header class="main-header">
-        <div class="container">
-            <div class="logo-section">
-                <div class="logo">
-                    <i class="fas fa-rocket"></i>
-                    <span>Flow Flagues</span>
-                </div>
-                <p class="tagline">الأداء الذي تستحقه في روبلوكس</p>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#home" class="nav-link active"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="#flagues" class="nav-link"><i class="fas fa-cogs"></i> الفلاقات</a></li>
-                    <li><a href="#download" class="nav-link"><i class="fas fa-download"></i> التحميل</a></li>
-                    <li><a href="#tutorial" class="nav-link"><i class="fas fa-graduation-cap"></i> الشرح</a></li>
-                    <li><a href="#support" class="nav-link"><i class="fas fa-headset"></i> الدعم</a></li>
-                </ul>
-            </nav>
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
-
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    <span>ارفع أداء روبلوكس</span>
-                    <br>إلى مستوى غير مسبوق
-                </h1>
-                <p class="hero-description">
-                    فلاقات حصرية ومطورة خصيصاً لأعضاء سيرفر Flow 
-                    لتحقيق أقصى أداء واستقرار في لعبة روبلوكس. تجربة لعب سلسة بدون تقطيع.
-                </p>
-                <div class="hero-stats">
-                    <div class="stat animate">
-                        <i class="fas fa-chart-line"></i>
-                        <span class="stat-number">89+</span>
-                        <span class="stat-text">إطار في الثانية</span>
-                    </div>
-                    <div class="stat">
-                        <i class="fas fa-bolt"></i>
-                        <span class="stat-number">-70</span>
-                        <span class="stat-text">استهلاك موارد</span>
-                    </div>
-                    <div class="stat">
-                        <i class="fas fa-users"></i>
-                        <span class="stat-number">383</span>
-                        <span class="stat-text">عضو نشط</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="floating-card">
-                    <i class="fas fa-crown premium-icon"></i>
-                    <h3>حصري لـ Flow</h3>
-                    <p>أداء متفوق لجميع الأعضاء</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="flagues-section" id="flagues">
-        <div class="container">
-            <div class="section-header">
-                <h2><i class="fas fa-star"></i> حزمة فلاقات Flow المميزة</h2>
-                <p>إعدادات محسنة بعناية للحصول على أفضل تجربة في روبلوكس</p>
-            </div>
-
-            <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div class="warning-content">
-                    <h4>ملاحظة هامة:</h4>
-                    <p>إذا واجهت مشكلة تبند السكنات بعد تفعيل الفلاقات، قم بتحميل أي تطبيق VPN وشغله على دولة فرنسا أو أي دولة أوروبية. السكنات ستعود للعمل بشكل طبيعي. هذه المشكلة بسبب تحديثات لعبة روبلوكس الأخيرة وليست من الفلاقات.</p>
-                </div>
-            </div>
-
-            <div class="flagues-grid">
-                <div class="flague-card premium">
-                    <div class="card-header">
-                        <i class="fas fa-bolt card-icon"></i>
-                        <h3>فلاقات الأداء المتقدمة</h3>
-                        <span class="badge">الأولى</span>
-                    </div>
-                    <div class="card-body">
-                        <ul class="features-list">
-                            <li><i class="fas fa-check-circle"></i> تحسين جودة الرسومات</li>
-                            <li><i class="fas fa-check-circle"></i> تقليل استهلاك الذاكرة</li>
-                            <li><i class="fas fa-check-circle"></i> زيادة سرعة التحميل</li>
-                            <li><i class="fas fa-check-circle"></i> إطارات ثابتة ومستقرة</li>
-                            <li><i class="fas fa-check-circle"></i> إعدادات الظلال المحسنة</li>
-                        </ul>
-                        <p class="card-note"><i class="fas fa-desktop"></i> تعمل على أجهزة PC فقط</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="download-btn" data-flague="1"><i class="fas fa-download"></i> تحميل الفلاقات الأولى</button>
-                    </div>
-                </div>
-
-                <div class="flague-card premium">
-                    <div class="card-header">
-                        <i class="fas fa-sliders-h card-icon"></i>
-                        <h3>فلاقات التحسين الشاملة</h3>
-                        <span class="badge">الثانية</span>
-                    </div>
-                    <div class="card-body">
-                        <ul class="features-list">
-                            <li><i class="fas fa-check-circle"></i> تحسين أداء الشبكة</li>
-                            <li><i class="fas fa-check-circle"></i> تقليل زمن الاستجابة</li>
-                            <li><i class="fas fa-check-circle"></i> تحسين إدارة الذاكرة</li>
-                            <li><i class="fas fa-check-circle"></i> إعدادات الصوت المحسنة</li>
-                            <li><i class="fas fa-check-circle"></i> تحسين استقرار اللعبة</li>
-                        </ul>
-                        <p class="card-note"><i class="fas fa-mobile-alt"></i> قريباً على الأجهزة المحمولة</p>
-                    </div>
-                    <div class="card-footer">
-                        <button class="download-btn" data-flague="2"><i class="fas fa-download"></i> تحميل الفلاقات الثانية</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="coming-soon">
-                <i class="fas fa-clock"></i>
-                <p>جاري العمل على دعم أجهزة الهاتف - سيتم إصدارها قريباً</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="tutorial-section" id="tutorial">
-        <div class="container">
-            <div class="section-header">
-                <h2><i class="fas fa-video"></i> شرح تفعيل الفلاقات خطوة بخطوة</h2>
-                <p>شاهد الفيديو التعليمي للحصول على أفضل نتائج</p>
-            </div>
-            <div class="tutorial-content">
-                <div class="video-container">
-                    <div class="video-placeholder">
-                        <i class="fab fa-tiktok video-icon"></i>
-                        <h3>شرح كامل على تيك توك</h3>
-                        <p>شاهد الفيديو التوضيحي للطريقة الصحيحة</p>
-                        <a href="https://vt.tiktok.com/ZSm1eoYxW/" target="_blank" class="tiktok-btn"><i class="fab fa-tiktok"></i> مشاهدة الشرح على تيك توك</a>
-                    </div>
-                </div>
-                <div class="steps-container">
-                    <h3><i class="fas fa-list-ol"></i> خطوات التثبيت:</h3>
-                    <div class="steps">
-                        <div class="step"><span class="step-number">1</span><div class="step-content"><h4>تحميل برنامج التفعيل</h4><p>اختر أحد البرامج المخصصة لتشغيل الفلاقات</p></div></div>
-                        <div class="step"><span class="step-number">2</span><div class="step-content"><h4>تثبيت البرنامج</h4><p>شغّل البرنامج كمسؤول (Run as Administrator)</p></div></div>
-                        <div class="step"><span class="step-number">3</span><div class="step-content"><h4>تحميل الفلاقات</h4><p>استخدم الأزرار أعلاه لتحميل ملفات الفلاقات</p></div></div>
-                        <div class="step"><span class="step-number">4</span><div class="step-content"><h4>تفعيل الفلاقات</h4><p>اتبع التعليمات في الفيديو لتفعيل الإعدادات</p></div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="download-section" id="download">
-        <div class="container">
-            <div class="section-header">
-                <h2><i class="fas fa-download"></i> تحميل برامج التفعيل</h2>
-                <p>اختر البرنامج المناسب لجهازك</p>
-            </div>
-            <div class="download-grid">
-                <div class="download-card">
-                    <div class="app-icon"><i class="fas fa-desktop"></i></div>
-                    <h3>Velostrap</h3>
-                    <p>برنامج خفيف وسريع لتشغيل الفلاقات</p>
-                    <ul class="app-features">
-                        <li><i class="fas fa-check"></i> واجهة مستخدم بسيطة</li>
-                        <li><i class="fas fa-check"></i> تحديثات تلقائية</li>
-                        <li><i class="fas fa-check"></i> دعم فني مستمر</li>
-                    </ul>
-                    <a href="https://www.mediafire.com/file/xabv1w15i9j7300/Velostrap.exe/file" target="_blank" class="app-download-btn"><i class="fas fa-external-link-alt"></i> تحميل من MediaFire</a>
-                </div>
-
-                <div class="download-card">
-                    <div class="app-icon"><i class="fas fa-laptop-code"></i></div>
-                    <h3>Flague Activator</h3>
-                    <p>برنامج متقدم مع خيارات إضافية</p>
-                    <ul class="app-features">
-                        <li><i class="fas fa-check"></i> إعدادات متقدمة</li>
-                        <li><i class="fas fa-check"></i> نسخ احتياطي تلقائي</li>
-                        <li><i class="fas fa-check"></i> إصلاح تلقائي للأخطاء</li>
-                    </ul>
-                    <a href="https://drive.google.com/file/d/1MldiYrHXaLkLg9GLYofTOOuEY7VLuMaJ/view" target="_blank" class="app-download-btn"><i class="fab fa-google-drive"></i> تحميل من Google Drive</a>
-                </div>
-
-                <div class="download-card">
-                    <div class="app-icon"><i class="fas fa-fire"></i></div>
-                    <h3>KYROX</h3>
-                    <p>برنامج KYROX - الحل البديل المثالي</p>
-                    <div class="warning-box" style="margin-bottom: 15px; padding: 10px; background: rgba(250, 166, 26, 0.05);">
-                        <i class="fas fa-info-circle" style="color: #43b581; font-size: 1rem;"></i>
-                        <p style="font-size: 0.85rem;">إذا كانت التطبيقات أعلاه (Velostrap و Flague Activator) لا تعمل معك بشكل صحيح، جرب هذا البرنامج</p>
-                    </div>
-                    <ul class="app-features">
-                        <li><i class="fas fa-check"></i> متوافق مع جميع إصدارات الويندوز</li>
-                        <li><i class="fas fa-check"></i> خفيف وسريع لا يستهلك موارد</li>
-                        <li><i class="fas fa-check"></i> تم تجربته وهو آمن تماماً</li>
-                        <li><i class="fas fa-check"></i> واجهة بسيطة وسهلة الاستخدام</li>
-                    </ul>
-                    <a href="https://download1324.mediafire.com/kabcid1x90pgEknioQKVYZUb_TSVmZ5cAB7Hb_DC6ktidGtJxg3_ygfBAudz3RIk_YJJjtphs-erI1tP1KIfwH6W5rsgkz6oxWd2B818Wk0_MggPBfsh9V1JWiObrLXkQSG8RLK3ZCIrtkcu8EN7kvqKoviYhgOfXidPKuzhjR7vSlg/f9za7ssk6khxced/KYROX.exe" target="_blank" class="app-download-btn"><i class="fas fa-download"></i> تحميل KYROX الآن</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="info-section">
-        <div class="container">
-            <div class="info-card">
-                <h3><i class="fas fa-info-circle"></i> شرح برنامج KYROX</h3>
-                <p>برنامج KYROX هو الحل البديل الذي يعمل بكفاءة عالية لتفعيل الفلاقات على جهازك. تم تصميمه ليكون خفيفاً على موارد الجهاز وسهل الاستخدام. فقط قم بتحميل الملف، شغّله كمسؤول، ثم اتبع الخطوات لتفعيل الفلاقات. البرنامج آمن بنسبة 100% وتم تجربته من قبل آلاف المستخدمين.</p>
-                <p style="margin-top: 15px;"><strong>طريقة الاستخدام:</strong> بعد التحميل، قم بتشغيل الملف كمسؤول، اختر ملف الفلاقات الذي تريد تفعيله، ثم اضغط على زر التفعيل.</p>
-                <a href="https://discord.com/channels/1480421177536286822/1481030045223882793" target="_blank" class="discord-support-btn"><i class="fab fa-discord"></i> للنقاش أو المساعدة - اضغط هنا</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="discord-section" id="support">
-        <div class="container">
-            <div class="discord-container">
-                <div class="discord-info">
-                    <i class="fab fa-discord discord-icon"></i>
-                    <h2>انضم إلى مجتمع Flow</h2>
-                    <p>احصل على دعم فني مباشر، تحديثات حصرية، وتواصل مع أكثر من <span class="highlight">613</span> عضو نشط في مجتمعنا.</p>
-                    <ul class="discord-features">
-                        <li><i class="fas fa-headset"></i> دعم فني على مدار الساعة</li>
-                        <li><i class="fas fa-bell"></i> إشعارات بالتحديثات الجديدة</li>
-                        <li><i class="fas fa-users"></i> قنوات نقاش متنوعة</li>
-                        <li><i class="fas fa-gamepad"></i> فعاليات وأحداث حصرية</li>
-                    </ul>
-                    <a href="https://discord.gg/FYs3XG8ENb" target="_blank" class="discord-btn"><i class="fab fa-discord"></i> انضم إلى السيرفر الآن</a>
-                </div>
-                <div class="discord-preview">
-                    <div class="server-stats">
-                        <div class="server-stat"><i class="fas fa-user-friends"></i><div><h4>613+</h4><p>عضو نشط</p></div></div>
-                        <div class="server-stat"><i class="fas fa-comments"></i><div><h4>50+</h4><p>قناة نقاش</p></div></div>
-                        <div class="server-stat"><i class="fas fa-wrench"></i><div><h4>10+</h4><p>مطور محترف</p></div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo"><i class="fas fa-rocket"></i><span>Flow Flagues</span></div>
-                    <p class="footer-description">مركز الفلاقات الرسمي لسيرفر Flow. نقدم أفضل الحلول لتحسين أداء روبلوكس لأعضاء سيرفرنا المميزين.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>روابط سريعة</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
-                        <li><a href="#flagues"><i class="fas fa-chevron-left"></i> الفلاقات</a></li>
-                        <li><a href="#tutorial"><i class="fas fa-chevron-left"></i> الشرح</a></li>
-                        <li><a href="#support"><i class="fas fa-chevron-left"></i> الدعم</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>تواصل معنا</h4>
-                    <div class="social-links">
-                        <a href="https://discord.gg/FYs3XG8ENb" target="_blank" class="social-link"><i class="fab fa-discord"></i></a>
-                        <a href="https://vt.tiktok.com/ZSm1eoYxW/" target="_blank" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fas fa-headset"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <div class="disclaimer">
-                    <h5><i class="fas fa-exclamation-circle"></i> إخلاء مسؤولية:</h5>
-                    <p> فقط. الفلاقات المقدمة تعمل على أجهزة PC وتحتاج إلى صلاحيات مسؤول. نحن لسنا مسؤؤلين عن اي حظر قد يحصل لك في اللعبة.</p>
-                </div>
-                <div class="copyright">
-                    <p><i class="far fa-copyright"></i> جميع الحقوق محفوظة لسيرفر <span class="highlight">Flow</span> 2026</p>
-                    <p class="developer">تم التصميم بواسطة <span class="highlight">7oby-Awad</span></p>
-                    <p class="developer" style="font-size: 0.9rem; opacity: 0.7;"><i class="fab fa-discord"></i> Discord: u67y | <i class="fab fa-tiktok"></i> TikTok: 7nwsh.xv</p>
-                    <p class="version">الإصدار 3.3.0 | آخر تحديث: 24 أبريل 2026</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <div class="modal" id="downloadModal">
-        <div class="modal-content">
+    <!-- Modal التفاصيل -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
             <div class="modal-header">
-                <h3><i class="fas fa-download"></i> تحميل الفلاقات</h3>
-                <button class="modal-close" id="modalClose">×</button>
+                <img id="modalImg" src="" alt="Cover">
+                <div class="modal-details">
+                    <div class="modal-title" id="modalTitle">اسم المانهوا</div>
+                    <div class="score" id="modalScore">⭐ 0.0</div>
+                    <div class="genres" id="modalGenres">التصنيف</div>
+                </div>
             </div>
-            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-desc" id="modalDesc">الوصف غير متوفر حالياً.</div>
+            <div class="modal-actions">
+                <button class="btn" onclick="copyTitle()">📋 نسخ الاسم</button>
+                <a id="searchGoogleBtn" target="_blank" class="btn btn-outline">🔍 بحث في Google</a>
+            </div>
         </div>
     </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">تم النسخ بنجاح!</div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            initLoadingScreen();
-            initNavigation();
-            initDownloadButtons();
-            initModal();
-            initScrollAnimations();
-            initStatsCounter();
-            generateStars();
-        });
+        // قائمة الـ 100 مانهوا المستبعدة بالكامل
+        const initialExcluded = [
+            136331, 137304, 117540, 130870, 97897, 115000, 151025, 103156, 137595, 119276, 
+            177706, 113666, 130429, 141007, 120385, 116506, 175262, 75275, 117536, 52651, 
+            116382, 150836, 114542, 182066, 153432, 85155, 128882, 130149, 113488, 130229, 
+            170894, 60079, 173020, 110605, 141958, 113055, 129210, 141013, 153880, 178379, 
+            136204, 124577, 121565, 155485, 111075, 110042, 167834, 107720, 164857, 107918,
+            141479, 120440, 165182, 107518, 165287, 85869, 110472, 123739, 175946, 119363, 
+            159439, 153513, 108952, 187944, 129632, 144079, 130300, 100885, 141705, 122060, 
+            118267, 149483, 85208, 113607, 139572, 180891, 132165, 128521, 132093, 129758, 
+            114198, 146017, 140837, 168823, 153987, 117581, 103995, 151460, 138363, 101134, 
+            130566, 166154, 135318, 124783, 133708, 87154, 137969, 180890, 150170, 139339
+        ];
 
-        function generateStars() {
-            const stars1 = document.getElementById('stars1');
-            const stars2 = document.getElementById('stars2');
-            if (stars1 && stars2) {
-                for (let i = 0; i < 200; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    const size = Math.random() * 3 + 1;
-                    star.style.width = size + 'px';
-                    star.style.height = size + 'px';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.animationDelay = Math.random() * 5 + 's';
-                    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                    stars1.appendChild(star);
+        let savedExclusions = JSON.parse(localStorage.getItem('slax_excluded_ids')) || [];
+        let excludedIds = Array.from(new Set([...initialExcluded, ...savedExclusions]));
+        let currentFetchedList = [];
+        let activeTitleForCopy = '';
+        let pageNumber = 1;
+
+        function updateBadge() {
+            document.getElementById('excludedCount').innerText = `المستبعدة: ${excludedIds.length}`;
+            localStorage.setItem('slax_excluded_ids', JSON.stringify(excludedIds));
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        async function fetchUniqueManhwa() {
+            const btn = document.getElementById('loadBtn');
+            btn.innerText = "جاري الجلب...";
+            btn.disabled = true;
+
+            // تحديد perPage بشكل صريح داخل المتغيرات لضمان جلب 50 مانهوا
+            const query = `
+            query GetMassiveManhwa($page: Int, $perPage: Int, $excluded: [Int]) {
+              Page(page: $page, perPage: $perPage) {
+                media(type: MANGA, countryOfOrigin: "KR", sort: POPULARITY_DESC, id_not_in: $excluded) {
+                  id
+                  title { english romaji }
+                  coverImage { large }
+                  averageScore
+                  genres
+                  description
                 }
-                for (let i = 0; i < 100; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    const size = Math.random() * 4 + 2;
-                    star.style.width = size + 'px';
-                    star.style.height = size + 'px';
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.animationDelay = Math.random() * 5 + 's';
-                    star.style.animationDuration = (Math.random() * 4 + 3) + 's';
-                    stars2.appendChild(star);
+              }
+            }`;
+
+            try {
+                const response = await fetch('https://graphql.anilist.co', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { 
+                            page: 1, 
+                            perPage: 50, // إجبار السيرفر على إرجاع 50 مانهوا
+                            excluded: excludedIds 
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (!result.data || !result.data.Page || !result.data.Page.media) {
+                    throw new Error("Invalid API Response");
                 }
-            }
-        }
 
-        function initLoadingScreen() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
-                }, 1500);
-            }
-        }
+                const mediaList = result.data.Page.media;
 
-        function initNavigation() {
-            const menuToggle = document.getElementById('menuToggle');
-            const mainNav = document.querySelector('.main-nav');
-            if (menuToggle && mainNav) {
-                menuToggle.addEventListener('click', () => {
-                    mainNav.classList.toggle('active');
-                    menuToggle.innerHTML = mainNav.classList.contains('active') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                if (mediaList.length === 0) {
+                    document.getElementById('manhwaGrid').innerHTML = '<p style="grid-column: 1/-1;">تم عرض جميع المانهوات المتاحة!</p>';
+                    btn.innerText = "لا توجد نتائج جديدة";
+                    return;
+                }
+
+                currentFetchedList = mediaList;
+                renderCards(mediaList);
+
+                // إضافة المعروض إلى مصفوفة الاستبعاد
+                mediaList.forEach(item => {
+                    if(!excludedIds.includes(item.id)) excludedIds.push(item.id);
                 });
+                updateBadge();
+
+                btn.innerText = "عرض 50 مانهوا جديدة ➔";
+                btn.disabled = false;
+
+            } catch (err) {
+                console.error(err);
+                btn.innerText = "حدث خطأ، اضغط لإعادة المحاولة";
+                btn.disabled = false;
             }
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 768) { mainNav.classList.remove('active'); menuToggle.innerHTML = '<i class="fas fa-bars"></i>'; } });
-            });
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        const headerHeight = document.querySelector('.main-header').offsetHeight;
-                        window.scrollTo({ top: targetElement.offsetTop - headerHeight, behavior: 'smooth' });
-                    }
-                });
-            });
         }
 
-        function initDownloadButtons() {
-            document.querySelectorAll('.download-btn').forEach(button => {
-                button.addEventListener('click', function() { showDownloadModal(this.getAttribute('data-flague')); });
-            });
-        }
+        function renderCards(list) {
+            const grid = document.getElementById('manhwaGrid');
+            grid.innerHTML = '';
 
-        function initModal() {
-            const modal = document.getElementById('downloadModal');
-            const modalClose = document.getElementById('modalClose');
-            if (modalClose) modalClose.addEventListener('click', () => modal.classList.remove('active'));
-            modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) modal.classList.remove('active'); });
-        }
+            list.forEach(item => {
+                const title = item.title.english || item.title.romaji;
+                const score = item.averageScore ? (item.averageScore / 10).toFixed(1) : 'N/A';
+                const mainGenre = item.genres && item.genres.length > 0 ? item.genres.slice(0, 2).join(', ') : 'Manhwa';
 
-        function showDownloadModal(flagueType) {
-            const modal = document.getElementById('downloadModal');
-            const modalBody = document.getElementById('modalBody');
-            let content = flagueType === '1' ? `
-                <div class="modal-download-content"><div class="download-header"><i class="fas fa-bolt"></i><h4>تحميل فلاقات الأداء المتقدمة</h4></div>
-                <p class="download-description">هذه الفلاقات محسنة خصيصاً لتحسين أداء روبلوكس على أجهزة PC.</p>
-                <div class="download-info"><div class="info-item"><i class="fas fa-file-code"></i><span>نوع الملف: JSON</span></div><div class="info-item"><i class="fas fa-hdd"></i><span>الحجم: ~5 KB</span></div><div class="info-item"><i class="fas fa-shield-alt"></i><span>آمن 100%</span></div></div>
-                <div class="download-instructions"><h5><i class="fas fa-list-ol"></i> طريقة الاستخدام:</h5><ol><li>قم بتحميل ملف الفلاقات</li><li>افتح برنامج Velostrap أو Flague Activator أو KYROX</li><li>استورد ملف الفلاقات إلى البرنامج</li><li>اضغط على تفعيل</li><li>أعد تشغيل روبلوكس</li></ol></div>
-                <div class="download-actions"><button class="modal-download-btn" onclick="downloadFlagueFile('flagues1')"><i class="fas fa-download"></i> تحميل الآن</button><button class="modal-copy-btn" onclick="copyFlagueContent('1')"><i class="fas fa-copy"></i> نسخ المحتوى</button></div>
-                <div class="modal-warning"><i class="fas fa-exclamation-triangle"></i><p>تأكد من تشغيل VPN على فرنسا إذا واجهت مشكلة تبند السكنات</p></div></div>
-            ` : `
-                <div class="modal-download-content"><div class="download-header"><i class="fas fa-sliders-h"></i><h4>تحميل فلاقات التحسين الشاملة</h4></div>
-                <p class="download-description">حزمة فلاقات متكاملة لتحسين جميع جوانب اللعبة.</p>
-                <div class="download-info"><div class="info-item"><i class="fas fa-file-code"></i><span>نوع الملف: JSON</span></div><div class="info-item"><i class="fas fa-hdd"></i><span>الحجم: ~8 KB</span></div><div class="info-item"><i class="fas fa-shield-alt"></i><span>آمن 100%</span></div></div>
-                <div class="download-instructions"><h5><i class="fas fa-list-ol"></i> طريقة الاستخدام:</h5><ol><li>قم بتحميل ملف الفلاقات</li><li>شغّل برنامج التفعيل كمسؤول</li><li>اختر ملف الفلاقات الذي تم تحميله</li><li>اضغط على تطبيق الإعدادات</li><li>استمتع بالأداء المحسن</li></ol></div>
-                <div class="download-actions"><button class="modal-download-btn" onclick="downloadFlagueFile('flagues2')"><i class="fas fa-download"></i> تحميل الآن</button><button class="modal-copy-btn" onclick="copyFlagueContent('2')"><i class="fas fa-copy"></i> نسخ المحتوى</button></div>
-                <div class="modal-warning"><i class="fas fa-exclamation-triangle"></i><p>جاري العمل على دعم الهواتف - حالياً تعمل على أجهزة PC فقط</p></div></div>
-            `;
-            modalBody.innerHTML = content;
-            modal.classList.add('active');
-        }
-
-        function initScrollAnimations() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('animate'); });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-            document.querySelectorAll('.flague-card, .download-card, .step, .stat, .info-card').forEach(el => observer.observe(el));
-        }
-
-        function initStatsCounter() {
-            document.querySelectorAll('.stat-number').forEach(stat => {
-                let target = parseInt(stat.textContent);
-                if (isNaN(target)) target = 0;
-                let current = 0;
-                const timer = setInterval(() => {
-                    current += target / 80;
-                    if (current >= target) { stat.textContent = target + (stat.textContent.includes('+') ? '+' : ''); clearInterval(timer); }
-                    else { stat.textContent = Math.floor(current) + (stat.textContent.includes('+') ? '+' : ''); }
-                }, 30);
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openModal(item);
+                card.innerHTML = `
+                    <img src="${item.coverImage.large}" alt="${title}" loading="lazy">
+                    <div class="card-info">
+                        <div class="card-title" title="${title}">${title}</div>
+                        <div class="card-meta">
+                            <span class="score">⭐ ${score}</span>
+                            <span class="genres">${mainGenre}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
         }
 
-        window.downloadFlagueFile = function(type) {
-            const modal = document.getElementById('downloadModal');
-            const modalBody = document.getElementById('modalBody');
-            modalBody.innerHTML = `<div class="download-success"><i class="fas fa-check-circle success-icon"></i><h4>تم بدء التحميل بنجاح!</h4><p>سيبدأ تحميل ملف الفلاقات تلقائياً.</p><div class="success-tips"><h5><i class="fas fa-lightbulb"></i> نصائح مهمة:</h5><ul><li>احفظ الملف في مكان يسهل الوصول إليه</li><li>شغّل برنامج التفعيل كمسؤول</li><li>اتبع الخطوات في فيديو الشرح</li></ul></div><button class="modal-close-btn" onclick="closeModal()"><i class="fas fa-times"></i> إغلاق</button></div>`;
-            forceDownload(type);
-        };
+        function filterLocalResults() {
+            const term = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filtered = currentFetchedList.filter(item => {
+                const englishTitle = (item.title.english || '').toLowerCase();
+                const romajiTitle = (item.title.romaji || '').toLowerCase();
+                return englishTitle.includes(term) || romajiTitle.includes(term);
+            });
+            renderCards(filtered);
+        }
 
-        window.forceDownload = function(type) {
-            const content = type === 'flagues1' ? getFlagues1Content() : getFlagues2Content();
-            const blob = new Blob([content], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Flow_Flagues_${type === 'flagues1' ? 'Performance' : 'Optimization'}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
+        function openModal(item) {
+            const title = item.title.english || item.title.romaji;
+            activeTitleForCopy = title;
 
-        window.copyFlagueContent = function(type) {
-            const content = type === '1' ? getFlagues1Content() : getFlagues2Content();
-            navigator.clipboard.writeText(content).then(() => alert('تم نسخ المحتوى بنجاح!')).catch(() => alert('حدث خطأ'));
-        };
+            // تنظيف الوصف من نصوص HTML
+            let cleanDesc = item.description || 'لا يوجد وصف متوفر لهذه المانهوا.';
+            cleanDesc = cleanDesc.replace(/<[^>]*>?/gm, '');
 
-        window.closeModal = function() { document.getElementById('downloadModal').classList.remove('active'); };
+            document.getElementById('modalImg').src = item.coverImage.large;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalScore').innerText = `⭐ ${item.averageScore ? (item.averageScore / 10).toFixed(1) : 'N/A'}`;
+            document.getElementById('modalGenres').innerText = item.genres ? item.genres.join(', ') : 'Manhwa';
+            document.getElementById('modalDesc').innerText = cleanDesc;
+            document.getElementById('searchGoogleBtn').href = `https://www.google.com/search?q=${encodeURIComponent(title + ' manhwa')}`;
 
-        function getFlagues1Content() { return `{"TextureQualityOverrideEnabled":"True","DebugPauseVoxelizer":"True","DebugPerfMode":"True","LocalLightCountsInCompatibilityThrottlePerTenThousand":"0","DebugDisplayFPS":"True","TaskSchedulerLimitTargetFpsTo2402":"False","TaskSchedulerTargetFps":"240","ExperienceStateCaptureHighlightTransparencyPercent":"0","CSGLevelOfDetailSwitchingDistanceL34":"0","CSGLevelOfDetailSwitchingDistanceL12":"0","TreeDiffModCheckShadowReportingRate":"0","CSGLevelOfDetailSwitchingDistance":"0","LightgridAsyncChunkContextCount":"0","DebugFRMQualityLevelOverride":"1","TextureQualityOverride":"3","RenderShadowHugeRadius":"0","LightstepHTTPTransportUrlPath":"null","LightstepHTTPTransportUrlHost":"null","LightstepToken":"null","HandleAltEnterFullscreenManually":"False","DebugForceFSMCPULightCulling":"False","DebugLightgridCPUForceSync":"False","RenderInitShadowmaps":"False","FastGPULightCulling3":"True","NewLightAttenuation3":"True","RenderCBRefactor2":"True","DebugSSAOForce":"False","DisablePostFx":"True","DebugSkyGray":"True","RenderMaxShadowAtlasUsageBeforeDownscale":"0","RenderShadowMapDepthCacheMinNodes":"0","RenderShadowMapDepthCacheMemLimit":"0","DebugFRMOptionalMSAALevelOverride":"1","GrassMovementReducedMotionFactor":"0","DebugTextureManagerSkipMips":"7","RenderLocalLightUpdatesMin":"0","RenderLocalLightUpdatesMax":"0","UnifiedLightingBlendZone":"0","RenderSurfaceLightOffset":"0","RenderLocalLightFadeInMs":"0","DebugForceMSAASamples":"1","FRMMaxGrassDistance":"0","RenderShadowmapBias":"0","FRMMinGrassDistance":"0","RenderUseTextureManager224":"False","TM2SkipMipsForUnstreamable2":"True","DoNotSkipMipsBasedOnSystemMemoryPS":"True","DebugLimitMinTextureResolutionWhenSkipMips":"8","EnablePowerTraceModule":"True","IncludePowerSaverMode":"True","BloomFrmCutoff":"1","SSAOMipLevels":"0"}`; }
-        function getFlagues2Content() { return `{"DFIntMaxFrameBufferSize":"4","FIntMaquettesFrameRateBufferPercentage":"0","DFFlagDebugForceAnisoOff":"True","FIntRenderMsFrameGatherInterval":"144","DFFlagDebugEnableInterpolationVisualizer":"True","DFIntLightstepHTTPTransportHundredthsPercent2":"0","DFFlagEnableLightstepReporting2":"False","DFFlagBrowserTrackerIdTelemetryEnabled":"False","DFFlagBaseNetworkMetrics":"False","FStringGamesUrlPath":"/games/","DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent":"0","FFlagCommitToGraphicsQualityFix":"True","DFIntS2PhysicsSenderRate":"256","FFlagFixGraphicsQuality":"True","FIntPGSAngularDampingPermillPersecond":"9999999999","DFIntRunningBaseOrientationP":"450","DFIntNewRunningBaseAltitudeD":"195","FFlagDebugDisplayFPS":"False","FIntCoordinatorPlannerStepsPerIteration":"0","DFIntSimArbiterCFLLengthScaleThou":"2147483647","FFlagDebugPerfMode":"True","FFlagOptimizeCFrameUpdatesIC4":"True","FFlagOptimizeCFrameUpdates4":"True","FFlagMovePrerenderV2":"True","FFlagPerformanceControlUsesRuntime":"True","FStringIXPGraphicsOptimizationModeQualityBias":"null","FStringIXPGraphicsOptimizationModeBalancedBias":"null","FIntCoordinatorMemoryPrioritizationFrequencyHz":"0","FIntLuauGcGoalCore":"125","DFIntCharacterLoadTime":"1","FIntRenderNodeEnterSleepingFrames":"0","FFlagHighlightOutlinesOnMobile":"True","DFIntHttpCachePerfHundredthsPercent":"1036372536","FIntRuntimeMaxNumOfMutexes":"1000000","DFFlagGraphicsQualityUsageTelemetry":"False","DFIntHttpCacheCleanScheduleAfterMs":"1036372536","FFlagDebugGraphicsDisableDirect3D11":"True","DFIntFileCacheReserveSize":"2147483647","FIntRuntimeMaxNumOfStrands":"1000000","DFFlagGpuVsCpuBoundTelemetry":"False","DFIntHttpCacheEvictionExemptionMapMaxSize":"1036372536","DFFlagDebugExtendFramerateWidget":"True","FFlagChatTranslationSettingEnabled3":"False","DFIntLuaGcBoost":"2","FFlagEnableHarmonyOnFrameRateManager4":"True","DFFlagRobloxTelemetryAddDeviceRAM":"False","FIntCLI20390_2":"0","FFlagEnableNavBarLabels3":"False","DFIntHttpCacheAsyncWriterMaxPendingSize":"1036372536","DFIntLuauGcStepSizeKb":"5","FIntLuauGcGoal":"95","DFFlagDebugOverrideProfileFrameTimeNow":"True","FIntRuntimeMaxNumOfLatches":"1000000","FFlagLuaAppChartsPageRename":"False","DFIntHttpCacheReportSlowWritesMinDuration":"1036372536","DFIntHttpCachePerfSamplingRate":"1036372536","FStringIXPGraphicsOptimizationModePerformanceBias":"performanceBias","DFIntLuaGcMaxKb":"5000","DFIntHttpCacheCleanUpToAvailableSpaceMiB":"1036372536","DFFlagAddKtxContentHash2":"True","DFIntGraphicsOptimizationModePerformanceBiasPercent":"100","FFlagPerformanceControlEnablePortTextureManagerTrimMemory":"True","DFIntLuauGcStepMul":"100","DFFlagEnablePreloadAvatarAssets":"True","DFIntSignalRCoreHubMaxBackoffMs":"5000","DFIntSignalRCoreKeepAlivePingPeriodMs":"250","DFIntSignalRCoreHandshakeTimeoutMs":"3000","DFIntSignalRCoreHubBaseRetryMs":"10","DFIntSignalRCoreRpcQueueSize":"256","DFIntSignalRCoreServerTimeoutMs":"11100","FFlagEnableFPSAndFrameTime":"True"}`; }
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // دالة نسخ تعمل على جميع الأجهزة
+        function copyTitle() {
+            if (!activeTitleForCopy) return;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(activeTitleForCopy).then(() => {
+                    showToast("تم نسخ الاسم بنجاح!");
+                }).catch(() => fallbackCopy(activeTitleForCopy));
+            } else {
+                fallbackCopy(activeTitleForCopy);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast("تم نسخ الاسم بنجاح!");
+            } catch (err) {
+                alert("اسم المانهوا: " + text);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function resetExclusions() {
+            if (confirm("هل تريد إعادة ضبط قائمة الاستبعاد وإلغاء المحفوظات؟")) {
+                localStorage.removeItem('slax_excluded_ids');
+                excludedIds = [...initialExcluded];
+                updateBadge();
+                fetchUniqueManhwa();
+            }
+        }
+
+        // التشغيل التلقائي
+        updateBadge();
+        fetchUniqueManhwa();
     </script>
-
-<div style="position: fixed; bottom: 20px; left: 20px; z-index: 10000; width: 50px; height: 50px; background-color: rgb(96, 0, 0); color: rgb(255, 255, 255); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; font-weight: bold; border: 2px solid rgb(255, 0, 0);">CODE</div></body></html>
+</body>
+</html>
